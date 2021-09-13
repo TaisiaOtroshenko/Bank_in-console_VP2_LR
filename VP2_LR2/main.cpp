@@ -17,6 +17,7 @@ MENU_AUTH = "menu_auth.txt",
 MENU_CLI = "menu_client.txt", 
 MENU_EMP = "menu_employee.txt";
 
+ifstream FIN;
 char* buff = new char[1024]{};
 
 vector<Client> CLIENT{};
@@ -36,69 +37,142 @@ int AddEmployee();
 int Verify();
 int Screen_2();
 
+void Screen_0();
+
+
+
+
+
 int main()
 {
 	setlocale(0, "");
 
 #pragma region Загрузка файла клиентов
-	ifstream fin;
-	fin.open(CLI, ios_base::in);
+	
+	FIN.open(CLI, ios_base::in);
 
 	size_t item_count{};
-	fin >> item_count;
-	fin.ignore();
+	FIN >> item_count;
+	FIN.ignore();
 
 	
 	Client tmp_client{};
-	for (int i = 0; i < item_count && fin.is_open(); i++)
+	for (int i = 0; i < item_count && FIN.is_open(); i++)
 	{
-		fin.read((char*)&tmp_client, sizeof(Client));
+		FIN.read((char*)&tmp_client, sizeof(Client));
 		CLIENT.push_back(tmp_client);
 	}
-	fin.close();
+	FIN.close();
 #pragma endregion
 
 #pragma region Загрузка файла сотрудников
 
-	fin.open(EMP, ios_base::in);
+	FIN.open(EMP, ios_base::in);
 
 	item_count = 0;
-	fin >> item_count;
-	fin.ignore();
+	FIN >> item_count;
+	FIN.ignore();
 
 	
 	Employee tmp_employee{};
-	for (int i = 0; i < item_count && fin.is_open(); i++)
+	for (int i = 0; i < item_count && FIN.is_open(); i++)
 	{
-		fin.read((char*)&tmp_client, sizeof(Employee));
+		FIN.read((char*)&tmp_client, sizeof(Employee));
 		EMPLOYEE.push_back(tmp_employee);
 	}
-	fin.close();
+	FIN.close();
 #pragma endregion
 
+
+
+
+	Screen_0();
+	Screen_2();
+
+
+	system("pause");
+	return 0;
+}
+
+
+
+#pragma region функции первого меню
+	int AddClient()
+		//добавляет клиента в вектор
+	{
+		Client tmp_cli{};
+		tmp_cli.In();
+		CLIENT.push_back(tmp_cli);
+
+		return 0;
+	}
+	int AddEmployee()
+		//добавляет сотрудника в вектор
+	{
+		Employee tmp_emp{};
+		tmp_emp.In();
+		EMPLOYEE.push_back(tmp_emp);
+		return 0;
+	}
+	int Verify()
+		//проходит по векторам пользователей, сверяет логины и пароли
+	{
+		User tmp_user{};
+		tmp_user.In();
+		for (int i = 0; i < CLIENT.size(); i++)
+		{
+			if (tmp_user.getLogin() == CLIENT[i].getLogin())
+			{
+				cout << "Пользователь найден!" << endl;
+				if (tmp_user.getPassword() == CLIENT[i].getPassword()) {
+					CUR_USER = &CLIENT[i];
+					cout << "Пароль верный" << endl;
+				}
+			}
+		}
+		for (int i = 0; i < EMPLOYEE.size(); i++)
+		{
+			if (tmp_user.getLogin() == EMPLOYEE[i].getLogin())
+			{
+				cout << "Пользователь найден!" << endl;
+				if (tmp_user.getPassword() == EMPLOYEE[i].getPassword()) {
+					CUR_USER = &EMPLOYEE[i];
+					cout << "Пароль верный" << endl;
+				}
+			}
+		}
+		if (CUR_USER == nullptr)
+		{
+			cout << "Неверно введены данные" << endl;
+		}
+		return 0;
+	}
+#pragma endregion
+void Screen_0()
+{
 #pragma region заполнение массива пунктов первого меню
 
-	fin.open(MENU_AUTH);
+	FIN.open(MENU_AUTH);
 
 	size_t item_count_1{};
-	fin >> item_count_1;
-	fin.ignore();
+	FIN >> item_count_1;
+	FIN.ignore();
 
 	ItemMenu* items_1 = new ItemMenu[item_count_1]{};
-	for (int i = 0; i < item_count_1 && fin.is_open(); i++)
+	for (int i = 0; i < item_count_1 && FIN.is_open(); i++)
 	{
-		fin.getline(buff, 1023);
+		FIN.getline(buff, 1023);
 		items_1[i].SetItemName(buff);
 	}
-	fin.close();
+	FIN.close();
 
 
 	items_1[0].SetFunc(AddClient);
 	items_1[1].SetFunc(AddEmployee);
 	items_1[2].SetFunc(Verify);
 #pragma endregion
-
 #pragma region вызов первого меню
+
 	CMenu menu_auth = CMenu("Меню входа", items_1, item_count_1);
 
 	while (CUR_USER == nullptr)
@@ -106,63 +180,12 @@ int main()
 		cout << menu_auth;
 		menu_auth.RunCommand();
 	}
-			
-	Screen_2();
-
-
-	system("pause");
-	return 0;
-}
 #pragma endregion
-
-
-
-
-
-int AddClient()
-{
-	Client tmp_cli{};
-	tmp_cli.In();
-	CLIENT.push_back(tmp_cli);
-
-	return 0;
 }
-int AddEmployee()
-{
-	Employee tmp_emp{};
-	tmp_emp.In();
-	EMPLOYEE.push_back(tmp_emp);
-	return 0;
-}
-int Verify()
-//пройти по векторам пользователей, сверить логины и пароли
-{
-	User tmp_user{};
-	tmp_user.In();
-	for (int i = 0; i < CLIENT.size(); i++)
-	{
-		if (tmp_user.getLogin() == CLIENT[i].getLogin())
-		{
-			cout << "Пользователь найден!" << endl;
-			if (tmp_user.getPassword() == CLIENT[i].getPassword()) {
-				CUR_USER = &CLIENT[i];
-				cout << "Пароль верный" << endl;
-			}
-		}
-	}
-	for (int i = 0; i < EMPLOYEE.size(); i++)
-	{
-		if (true)
-		{
-			CUR_USER = &EMPLOYEE[i];
-		}
-	}
-	if (CUR_USER == nullptr)
-	{
-		cout << "Неверно введены данные" << endl;
-	}
-	return 0;
-}
+
+
+
+
 
 
 
