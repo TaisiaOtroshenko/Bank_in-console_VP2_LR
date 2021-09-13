@@ -18,6 +18,7 @@ MENU_AUTH = "menu_auth.txt",
 MENU_CLI = "menu_client.txt",
 MENU_EMP = "menu_employee.txt";
 
+ifstream FIN;
 char* buff = new char[1024]{};
 
 vector<Client> CLIENT{};
@@ -39,44 +40,50 @@ int AddEmployee();
 int Verify();
 int Screen_2();
 
+void Screen_0();
+
+
+
+
+
 int main()
 {
 	setlocale(0, "");
 
-#pragma region Загрузка файла клиентов
-	ifstream fin;
-	fin.open(CLI, ios_base::in);
+#pragma region �������� ����� ��������
+	
+	FIN.open(CLI, ios_base::in);
 
 	size_t item_count{};
-	fin >> item_count;
-	fin.ignore();
+	FIN >> item_count;
+	FIN.ignore();
 
 
 	Client tmp_client{};
-	for (int i = 0; i < item_count && fin.is_open(); i++)
+	for (int i = 0; i < item_count && FIN.is_open(); i++)
 	{
-		fin.read((char*)&tmp_client, sizeof(Client));
+		FIN.read((char*)&tmp_client, sizeof(Client));
 		CLIENT.push_back(tmp_client);
 	}
-	fin.close();
+	FIN.close();
 #pragma endregion
 
 #pragma region Загрузка файла сотрудников
 
-	fin.open(EMP, ios_base::in);
+	FIN.open(EMP, ios_base::in);
 
 	item_count = 0;
-	fin >> item_count;
-	fin.ignore();
+	FIN >> item_count;
+	FIN.ignore();
 
 
 	Employee tmp_employee{};
-	for (int i = 0; i < item_count && fin.is_open(); i++)
+	for (int i = 0; i < item_count && FIN.is_open(); i++)
 	{
-		fin.read((char*)&tmp_client, sizeof(Employee));
+		FIN.read((char*)&tmp_client, sizeof(Employee));
 		EMPLOYEE.push_back(tmp_employee);
 	}
-	fin.close();
+	FIN.close();
 #pragma endregion
 
 
@@ -100,28 +107,28 @@ int main()
 
 #pragma region заполнение массива пунктов первого меню
 
-	fin.open(MENU_AUTH);
+	FIN.open(MENU_AUTH);
 
 	size_t item_count_1{};
-	fin >> item_count_1;
-	fin.ignore();
+	FIN >> item_count_1;
+	FIN.ignore();
 
 	ItemMenu* items_1 = new ItemMenu[item_count_1]{};
-	for (int i = 0; i < item_count_1 && fin.is_open(); i++)
+	for (int i = 0; i < item_count_1 && FIN.is_open(); i++)
 	{
-		fin.getline(buff, 1023);
+		FIN.getline(buff, 1023);
 		items_1[i].SetItemName(buff);
 	}
-	fin.close();
+	FIN.close();
 
 
 	items_1[0].SetFunc(AddClient);
 	items_1[1].SetFunc(AddEmployee);
 	items_1[2].SetFunc(Verify);
 #pragma endregion
+#pragma region ����� ������� ����
 
-#pragma region вызов первого меню
-	CMenu menu_auth = CMenu("Меню входа", items_1, item_count_1);
+	CMenu menu_auth = CMenu("���� �����", items_1, item_count_1);
 
 	while (CUR_USER == nullptr)
 	{
@@ -136,6 +143,7 @@ int main()
 	return 0;
 }
 #pragma endregion
+}
 
 
 
