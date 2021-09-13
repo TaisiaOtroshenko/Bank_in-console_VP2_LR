@@ -1,21 +1,20 @@
-Ôªø#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <vector>
 
 #include "CMenu.h"
 #include "Client.h"
 #include "Employee.h"
-#include "Account.h"
 
 using namespace std;
 using namespace otv;
 
 typedef int(*func)();
 
-string CLI = "client.bin", EMP = "employee.bin", ACC = "accounts.bin",
+string CLI = "client.bin", EMP = "employee.bin", 
 
-MENU_AUTH = "menu_auth.txt",
-MENU_CLI = "menu_client.txt",
+MENU_AUTH = "menu_auth.txt", 
+MENU_CLI = "menu_client.txt", 
 MENU_EMP = "menu_employee.txt";
 
 ifstream FIN;
@@ -23,8 +22,6 @@ char* buff = new char[1024]{};
 
 vector<Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
-vector <Account> ACCOUNT{};
-
 int VERIFY;
 User* CUR_USER{};
 
@@ -50,15 +47,21 @@ int main()
 {
 	setlocale(0, "");
 
+<<<<<<< HEAD
 #pragma region ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
 	
 	FIN.open(CLI, ios_base::in);
+=======
+#pragma region «‡„ÛÁÍ‡ Ù‡ÈÎ‡ ÍÎËÂÌÚÓ‚
+	ifstream fin;
+	fin.open(CLI, ios_base::in);
+>>>>>>> parent of 44dfa9a (–¥–æ–±–∞–≤–∏–ª –∑–∞–∫–≥—Ä—É–∑–∫—É —Ñ–∞–π–ª–æ–≤ –∫–∞—Ä—Ç)
 
 	size_t item_count{};
 	FIN >> item_count;
 	FIN.ignore();
 
-
+	
 	Client tmp_client{};
 	for (int i = 0; i < item_count && FIN.is_open(); i++)
 	{
@@ -68,7 +71,7 @@ int main()
 	FIN.close();
 #pragma endregion
 
-#pragma region –ó–∞–≥—Ä—É–∑–∫–∞ —Ñ–∞–π–ª–∞ —Å–æ—Ç—Ä—É–¥–Ω–∏–∫–æ–≤
+#pragma region «‡„ÛÁÍ‡ Ù‡ÈÎ‡ ÒÓÚÛ‰ÌËÍÓ‚
 
 	FIN.open(EMP, ios_base::in);
 
@@ -76,7 +79,7 @@ int main()
 	FIN >> item_count;
 	FIN.ignore();
 
-
+	
 	Employee tmp_employee{};
 	for (int i = 0; i < item_count && FIN.is_open(); i++)
 	{
@@ -86,26 +89,7 @@ int main()
 	FIN.close();
 #pragma endregion
 
-
-#pragma region –ó–∞–≥—Ä—É–∑–∫–∞ —Ñ–∞–π–ª–∞ –∫–∞—Ä—Ç–æ—á–µ–∫
-
-	fin.open(ACC, ios_base::in);
-
-	item_count = 0;
-	fin >> item_count;
-	fin.ignore();
-
-
-	Account tmp_card{};
-	for (int i = 0; i < item_count && fin.is_open(); i++)
-	{
-		fin.read((char*)&tmp_card, sizeof(Account));
-		ACCOUNT.push_back(tmp_card);
-	}
-	fin.close();
-#pragma endregion
-
-#pragma region –∑–∞–ø–æ–ª–Ω–µ–Ω–∏–µ –º–∞—Å—Å–∏–≤–∞ –ø—É–Ω–∫—Ç–æ–≤ –ø–µ—Ä–≤–æ–≥–æ –º–µ–Ω—é
+#pragma region Á‡ÔÓÎÌÂÌËÂ Ï‡ÒÒË‚‡ ÔÛÌÍÚÓ‚ ÔÂ‚Ó„Ó ÏÂÌ˛
 
 	FIN.open(MENU_AUTH);
 
@@ -128,14 +112,19 @@ int main()
 #pragma endregion
 #pragma region ÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ
 
+<<<<<<< HEAD
 	CMenu menu_auth = CMenu("ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ", items_1, item_count_1);
+=======
+#pragma region ‚˚ÁÓ‚ ÔÂ‚Ó„Ó ÏÂÌ˛
+	CMenu menu_auth = CMenu("ÃÂÌ˛ ‚ıÓ‰‡", items_1, item_count_1);
+>>>>>>> parent of 44dfa9a (–¥–æ–±–∞–≤–∏–ª –∑–∞–∫–≥—Ä—É–∑–∫—É —Ñ–∞–π–ª–æ–≤ –∫–∞—Ä—Ç)
 
 	while (CUR_USER == nullptr)
 	{
 		cout << menu_auth;
 		menu_auth.RunCommand();
 	}
-
+			
 	Screen_2();
 
 
@@ -165,7 +154,7 @@ int AddEmployee()
 	return 0;
 }
 int Verify()
-//–ø—Ä–æ–π—Ç–∏ –ø–æ –≤–µ–∫—Ç–æ—Ä–∞–º –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª–µ–π, —Å–≤–µ—Ä–∏—Ç—å –ª–æ–≥–∏–Ω—ã –∏ –ø–∞—Ä–æ–ª–∏
+//ÔÓÈÚË ÔÓ ‚ÂÍÚÓ‡Ï ÔÓÎ¸ÁÓ‚‡ÚÂÎÂÈ, Ò‚ÂËÚ¸ ÎÓ„ËÌ˚ Ë Ô‡ÓÎË
 {
 	User tmp_user{};
 	tmp_user.In();
@@ -173,10 +162,10 @@ int Verify()
 	{
 		if (tmp_user.getLogin() == CLIENT[i].getLogin())
 		{
-			cout << "–ü–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—å –Ω–∞–π–¥–µ–Ω!" << endl;
+			cout << "œÓÎ¸ÁÓ‚‡ÚÂÎ¸ Ì‡È‰ÂÌ!" << endl;
 			if (tmp_user.getPassword() == CLIENT[i].getPassword()) {
 				CUR_USER = &CLIENT[i];
-				cout << "–ü–∞—Ä–æ–ª—å –≤–µ—Ä–Ω—ã–π" << endl;
+				cout << "œ‡ÓÎ¸ ‚ÂÌ˚È" << endl;
 			}
 		}
 	}
@@ -189,7 +178,7 @@ int Verify()
 	}
 	if (CUR_USER == nullptr)
 	{
-		cout << "–ù–µ–≤–µ—Ä–Ω–æ –≤–≤–µ–¥–µ–Ω—ã –¥–∞–Ω–Ω—ã–µ" << endl;
+		cout << "ÕÂ‚ÂÌÓ ‚‚Â‰ÂÌ˚ ‰‡ÌÌ˚Â" << endl;
 	}
 	return 0;
 }
@@ -198,7 +187,7 @@ int Verify()
 
 int Screen_2()
 {
-#pragma region –∑–∞–ø–æ–ª–Ω–µ–Ω–∏–µ –º–∞—Å—Å–∏–≤–∞ –ø—É–Ω–∫—Ç–æ–≤ –≤—Ç–æ—Ä–æ–≥–æ –º–µ–Ω—é
+#pragma region Á‡ÔÓÎÌÂÌËÂ Ï‡ÒÒË‚‡ ÔÛÌÍÚÓ‚ ‚ÚÓÓ„Ó ÏÂÌ˛
 	ifstream fin;
 	fin.open(MENU_CLI);
 	size_t item_count_2{};
@@ -220,7 +209,7 @@ int Screen_2()
 	items_2[5].SetFunc(VerifyOut);
 #pragma endregion
 
-	CMenu menu_func = CMenu("–ú–µ–Ω—é –ø–æ–ª—å–∑–æ–≤–∞—Ç–µ–ª—è", items_2, item_count_2);
+	CMenu menu_func = CMenu("ÃÂÌ˛ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ", items_2, item_count_2);
 	do
 	{
 		cout << menu_func;
