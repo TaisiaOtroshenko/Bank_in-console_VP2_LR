@@ -35,6 +35,3 @@
 *.suo
 *.db
 *.ipch
-*.VC.*
-*.json
-*.sqlite
