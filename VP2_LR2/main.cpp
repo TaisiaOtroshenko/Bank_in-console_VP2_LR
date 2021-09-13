@@ -121,9 +121,7 @@ int main()
 
 int AddClient()
 {
-	cout << "Enter login, password, name:\n";
 	Client tmp_cli{};
-	cout << "";
 	tmp_cli.In();
 	CLIENT.push_back(tmp_cli);
 
@@ -132,7 +130,6 @@ int AddClient()
 int AddEmployee()
 {
 	Employee tmp_emp{};
-	cout << "Enter login, password, name:\n";
 	tmp_emp.In();
 	EMPLOYEE.push_back(tmp_emp);
 	return 0;
@@ -144,10 +141,13 @@ int Verify()
 	tmp_user.In();
 	for (int i = 0; i < CLIENT.size(); i++)
 	{
-		if (true)
+		if (tmp_user.getLogin() == CLIENT[i].getLogin())
 		{
-			CUR_USER = &CLIENT[i]; 
-
+			cout << "Пользователь найден!" << endl;
+			if (tmp_user.getPassword() == CLIENT[i].getPassword()) {
+				CUR_USER = &CLIENT[i];
+				cout << "Пароль верный" << endl;
+			}
 		}
 	}
 	for (int i = 0; i < EMPLOYEE.size(); i++)
@@ -156,6 +156,10 @@ int Verify()
 		{
 			CUR_USER = &EMPLOYEE[i];
 		}
+	}
+	if (CUR_USER == nullptr)
+	{
+		cout << "Неверно введены данные" << endl;
 	}
 	return 0;
 }

@@ -4,6 +4,16 @@ using namespace std;
 
 //перегрузить операторы сравнения на int и char и присвоения 
 
+string User::getLogin()
+{
+	return m_login;
+}
+
+string User::getPassword()
+{
+	return m_pass;
+}
+
 User::User()
 {
 	m_id = ID_user++;
@@ -13,7 +23,12 @@ User::User()
 
 void User::In()
 {
+	cout << "Enter login:	";
+	
 	cin >> m_login;
+
+	cout << "\nEnter password:	";
+
 	cin >> m_pass;
 }
 

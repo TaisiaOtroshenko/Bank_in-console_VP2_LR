@@ -14,6 +14,8 @@ protected:
 	string m_name{};
 
 public:
+	string getLogin();
+	string getPassword();
 	
 	User();
 	void In();

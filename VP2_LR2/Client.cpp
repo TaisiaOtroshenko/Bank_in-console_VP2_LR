@@ -29,8 +29,11 @@ void Client::Print() const
 }*/
 void Client::In()
 {
+	cout << "¬ведите логин:	";
 	cin >> m_login;
+	cout << "\n¬ведите пароль:	";
 	cin >> m_pass;
+	cout << "\n¬ведите им€:	";
 	cin >> m_name;
 }
 bool operator> (const Client& a, const Client& b)
