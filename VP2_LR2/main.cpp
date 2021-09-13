@@ -1,26 +1,29 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <fstream>
 #include <vector>
 
 #include "CMenu.h"
 #include "Client.h"
 #include "Employee.h"
+#include "Account.h"
 
 using namespace std;
 using namespace otv;
 
 typedef int(*func)();
 
-string CLI = "client.bin", EMP = "employee.bin", 
+string CLI = "client.bin", EMP = "employee.bin", ACC = "accounts.bin",
 
-MENU_AUTH = "menu_auth.txt", 
-MENU_CLI = "menu_client.txt", 
+MENU_AUTH = "menu_auth.txt",
+MENU_CLI = "menu_client.txt",
 MENU_EMP = "menu_employee.txt";
 
 char* buff = new char[1024]{};
 
 vector<Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
+vector <Account> ACCOUNT{};
+
 int VERIFY;
 User* CUR_USER{};
 
@@ -40,7 +43,7 @@ int main()
 {
 	setlocale(0, "");
 
-#pragma region Çàãðóçêà ôàéëà êëèåíòîâ
+#pragma region Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ñ„Ð°Ð¹Ð»Ð° ÐºÐ»Ð¸ÐµÐ½Ñ‚Ð¾Ð²
 	ifstream fin;
 	fin.open(CLI, ios_base::in);
 
@@ -48,7 +51,7 @@ int main()
 	fin >> item_count;
 	fin.ignore();
 
-	
+
 	Client tmp_client{};
 	for (int i = 0; i < item_count && fin.is_open(); i++)
 	{
@@ -58,7 +61,7 @@ int main()
 	fin.close();
 #pragma endregion
 
-#pragma region Çàãðóçêà ôàéëà ñîòðóäíèêîâ
+#pragma region Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ñ„Ð°Ð¹Ð»Ð° ÑÐ¾Ñ‚Ñ€ÑƒÐ´Ð½Ð¸ÐºÐ¾Ð²
 
 	fin.open(EMP, ios_base::in);
 
@@ -66,7 +69,7 @@ int main()
 	fin >> item_count;
 	fin.ignore();
 
-	
+
 	Employee tmp_employee{};
 	for (int i = 0; i < item_count && fin.is_open(); i++)
 	{
@@ -76,7 +79,26 @@ int main()
 	fin.close();
 #pragma endregion
 
-#pragma region çàïîëíåíèå ìàññèâà ïóíêòîâ ïåðâîãî ìåíþ
+
+#pragma region Ð—Ð°Ð³Ñ€ÑƒÐ·ÐºÐ° Ñ„Ð°Ð¹Ð»Ð° ÐºÐ°Ñ€Ñ‚Ð¾Ñ‡ÐµÐº
+
+	fin.open(ACC, ios_base::in);
+
+	item_count = 0;
+	fin >> item_count;
+	fin.ignore();
+
+
+	Account tmp_card{};
+	for (int i = 0; i < item_count && fin.is_open(); i++)
+	{
+		fin.read((char*)&tmp_card, sizeof(Account));
+		ACCOUNT.push_back(tmp_card);
+	}
+	fin.close();
+#pragma endregion
+
+#pragma region Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð¼Ð°ÑÑÐ¸Ð²Ð° Ð¿ÑƒÐ½ÐºÑ‚Ð¾Ð² Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ
 
 	fin.open(MENU_AUTH);
 
@@ -98,15 +120,15 @@ int main()
 	items_1[2].SetFunc(Verify);
 #pragma endregion
 
-#pragma region âûçîâ ïåðâîãî ìåíþ
-	CMenu menu_auth = CMenu("Ìåíþ âõîäà", items_1, item_count_1);
+#pragma region Ð²Ñ‹Ð·Ð¾Ð² Ð¿ÐµÑ€Ð²Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ
+	CMenu menu_auth = CMenu("ÐœÐµÐ½ÑŽ Ð²Ñ…Ð¾Ð´Ð°", items_1, item_count_1);
 
 	while (CUR_USER == nullptr)
 	{
 		cout << menu_auth;
 		menu_auth.RunCommand();
 	}
-			
+
 	Screen_2();
 
 
@@ -135,7 +157,7 @@ int AddEmployee()
 	return 0;
 }
 int Verify()
-//ïðîéòè ïî âåêòîðàì ïîëüçîâàòåëåé, ñâåðèòü ëîãèíû è ïàðîëè
+//Ð¿Ñ€Ð¾Ð¹Ñ‚Ð¸ Ð¿Ð¾ Ð²ÐµÐºÑ‚Ð¾Ñ€Ð°Ð¼ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÐµÐ¹, ÑÐ²ÐµÑ€Ð¸Ñ‚ÑŒ Ð»Ð¾Ð³Ð¸Ð½Ñ‹ Ð¸ Ð¿Ð°Ñ€Ð¾Ð»Ð¸
 {
 	User tmp_user{};
 	tmp_user.In();
@@ -143,10 +165,10 @@ int Verify()
 	{
 		if (tmp_user.getLogin() == CLIENT[i].getLogin())
 		{
-			cout << "Ïîëüçîâàòåëü íàéäåí!" << endl;
+			cout << "ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒ Ð½Ð°Ð¹Ð´ÐµÐ½!" << endl;
 			if (tmp_user.getPassword() == CLIENT[i].getPassword()) {
 				CUR_USER = &CLIENT[i];
-				cout << "Ïàðîëü âåðíûé" << endl;
+				cout << "ÐŸÐ°Ñ€Ð¾Ð»ÑŒ Ð²ÐµÑ€Ð½Ñ‹Ð¹" << endl;
 			}
 		}
 	}
@@ -159,7 +181,7 @@ int Verify()
 	}
 	if (CUR_USER == nullptr)
 	{
-		cout << "Íåâåðíî ââåäåíû äàííûå" << endl;
+		cout << "ÐÐµÐ²ÐµÑ€Ð½Ð¾ Ð²Ð²ÐµÐ´ÐµÐ½Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ðµ" << endl;
 	}
 	return 0;
 }
@@ -168,7 +190,7 @@ int Verify()
 
 int Screen_2()
 {
-#pragma region çàïîëíåíèå ìàññèâà ïóíêòîâ âòîðîãî ìåíþ
+#pragma region Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð¼Ð°ÑÑÐ¸Ð²Ð° Ð¿ÑƒÐ½ÐºÑ‚Ð¾Ð² Ð²Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾ Ð¼ÐµÐ½ÑŽ
 	ifstream fin;
 	fin.open(MENU_CLI);
 	size_t item_count_2{};
@@ -190,7 +212,7 @@ int Screen_2()
 	items_2[5].SetFunc(VerifyOut);
 #pragma endregion
 
-	CMenu menu_func = CMenu("Ìåíþ ïîëüçîâàòåëÿ", items_2, item_count_2);
+	CMenu menu_func = CMenu("ÐœÐµÐ½ÑŽ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»Ñ", items_2, item_count_2);
 	do
 	{
 		cout << menu_func;
