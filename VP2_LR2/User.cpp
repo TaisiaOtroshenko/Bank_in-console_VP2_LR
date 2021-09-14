@@ -4,20 +4,15 @@ using namespace std;
 
 //перегрузить операторы сравнения на int и char и присвоения 
 
-string User::GetLogin()
+string User::getLogin()
 {
 	return m_login;
 }
 
-string User::GetPass()
+string User::getPassword()
 {
 	return m_pass;
 }
-bool User::GetLvl()
-{
-	return m_lvl;
-}
-
 
 User::User()
 {
