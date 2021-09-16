@@ -9,18 +9,22 @@ Employee::Employee()
 	m_lvl = true;
 }
 
-void Employee::In()
+void Employee::In() // &&& узнать, как заставить эту функцию вызывать .In класса-родителя User
 {
+	cout << "Введите логин: ";
 	cin >> m_login;
+	cout << "Введите пароль: ";
 	cin >> m_pass;
+	cout << "Введите имя: ";
 	cin >> m_name;
 }
 
 void Employee::Print() const
 {
+	cout << "\t\t" << "Текущие данные пользователя" << endl;
 	cout << "Тип пользователя - Сотрудник" << endl;
 	cout << "ID пользователя - " << m_id << endl;
-	cout << "Имя польззователя - " << m_name << endl;
+	cout << "Имя пользователя - " << m_name << endl;
 }
 
 /*Employee Employee:: operator=(Employee a)

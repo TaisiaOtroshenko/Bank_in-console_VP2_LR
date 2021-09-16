@@ -11,6 +11,7 @@ Client::Client()
 
 void Client::Print() const
 {
+	cout << "\t\t" << "Текущие данные пользователя" << endl;
 	cout << "Тип пользователя - Клиент" << endl;
 	cout << "ID пользователя - " << m_id << endl;
 	cout << "Имя польззователя - " << m_name << endl;
@@ -28,7 +29,7 @@ Client Client::operator=(Client a)
 	//m_cards = a.m_cards;
 	return *this;
 }
-void Client::In()
+void Client::In() // &&& узнать, как заставить эту функцию вызывать .In класса-родителя User
 {
 	cout << "Введите логин: ";
 	cin >> m_login;

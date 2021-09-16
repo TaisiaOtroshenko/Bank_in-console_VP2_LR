@@ -37,7 +37,7 @@ namespace otv
 #pragma endregion
     void CMenu::Print() const
     {
-        cout << m_title << endl;
+        cout << "\t\t" << m_title << endl;
         for (int i = 0; i < m_count; i++)
         {
             cout << i + 1 << ". ";
@@ -49,7 +49,17 @@ namespace otv
     void CMenu::RunCommand()
     {
         cout << "\n   Select >> ";
+        cin >> m_select; 
+        //  !!! Нужна обработка ввода. Эта не пашет
+        /*try
+        {
         cin >> m_select;
+        }
+        catch (...)
+        {
+            cout << "Неверный ввод" << endl;
+            system("pause");
+        }*/
         if (m_select == 0)
         {
             m_func_save();

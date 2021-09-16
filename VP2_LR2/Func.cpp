@@ -30,13 +30,32 @@ Type* Filter(Type* arr, T par)
 }
 
 template<typename Type>
-void Del(Type* arr, size_t index)
+void Del(Type* arr, size_t id)
 {
-	for (size_t i = index; i < arr.size()-1; ++i)
+	// поиск номера элемента с заданным id
+	bool have = false;
+	for (size_t i = 0; i < arr.size(); ++i)
 	{
-		arr[i] = arr[i + 1];
+		if (arr[i].m_id == id)
+		{
+			have = true;
+			id = i;
+			break;
+		}
 	}
-	arr.pop_back();
+	//удаление
+	if (!have)
+	{
+		cout << "Нет элементов с таким индексом" << endl;
+	}
+	else
+	{
+		for (size_t i = id; i < arr.size() - 1; ++i)
+		{
+			arr[i] = arr[i + 1];
+		}
+		arr.pop_back();
+	}
 }
 
 template<typename Type>

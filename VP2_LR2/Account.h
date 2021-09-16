@@ -14,6 +14,7 @@ public:
 	Account();
 	Account(size_t id_owner);
 
+	size_t GetId();
 	size_t GetIdOwner();
 	//void Trans(Account scd, int summ_tr);
 

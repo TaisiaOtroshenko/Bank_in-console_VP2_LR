@@ -2,11 +2,11 @@
 #include "Account.h"
 using namespace std;
 
-//ввод элемента;
-
 Account::Account()
 {
 	m_id = ID_account++;
+
+	// !!! Какого-то дьявола выводится время вывода, а не время создания объекта
 	time_t now = time(0);
 	m_date = ctime(&now);
 }
@@ -16,6 +16,10 @@ Account::Account(size_t id_owner)
 	m_id = ID_account++;
 	time_t now = time(0);
 	m_date = ctime(&now);
+}
+size_t Account::GetId()
+{
+	return m_id;
 }
 size_t Account::GetIdOwner()
 {
@@ -39,7 +43,7 @@ void Account::Print() const
 	cout << "Имя карты - " << m_name << endl;
 	cout << "Номер карты - " << m_id << endl;
 	cout << "ID владельца карты - " << m_id_owner << endl;
-	cout << "Дата создания карты - " << m_date << endl;
+	cout << "Дата создания карты - " << m_date;
 	cout << "\t Баланс: " << m_balance << endl;
 }
 ostream& operator<< (ostream& out, const Account& acc)

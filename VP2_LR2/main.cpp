@@ -6,10 +6,12 @@
 #include "Client.h"
 #include "Employee.h"
 #include "Account.h"
-#include "Func.h"
+//#include "Func.h"
 
 using namespace std;
 using namespace otv;
+
+#pragma region Константы
 
 typedef int(*func)();
 
@@ -19,32 +21,36 @@ MENU_AUTH = "menu_auth.txt",
 MENU_CLI = "menu_client.txt",
 MENU_EMP = "menu_employee.txt",
 MENU_LIST = "menu_list.txt";
+ifstream FIN_TXT;
 
-ifstream fout_bin, FIN_TXT;
 char* buff = new char[1024]{};
 
 vector <Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
 vector <Account> ACCOUNT{};
 User* CUR_USER{};
+#pragma endregion
 
+#pragma region Список функций (.h)
 
+//Работает на достаточном уровне
 int AddClient();
 int AddEmployee();
 int Verify();
 
-
+//Работает на достаточном уровне
 int EditUser();
 
-int OutputAcc();
-int AddAcc();
-int DelAcc();
-int DelCli();
+int OutputAcc(/*Работает с ошибкой - время*/);
+int AddAcc(); 
+int DelAcc(/*Не работает - удаление в векторе*/);
+int DelCli(/*Не работает - удаление в векторе*/);
 
 int ListAcc();
 int ListCli();
 int DelEmp();
 
+//Работает на достаточном уровне
 int VerifyOut();
 
 int AddIt();
@@ -54,81 +60,34 @@ int SortIt();
 int FilterIt();
 int ListOut();
 
+//Работает на достаточном уровне
 void Screen_0();
 void Screen_1();
 void Screen_2();
 void Screen_3();
 
-
-void Save();
+void Begin();
+void Save(/*Не работает*/);
+#pragma endregion
 
 int main()
 {
 	setlocale(0, "");
 
-#pragma region Загрузка файла клиентов
-	
-	fout_bin.open(CLI, ios_base::in);
+	Begin();
 
-	size_t item_count{};
-	fout_bin >> item_count;
-	fout_bin.ignore();
-
-	
-	Client tmp_client{};
-	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	while (CUR_USER == nullptr)
 	{
-		fout_bin.read((char*)&tmp_client, sizeof(Client));
-		CLIENT.push_back(tmp_client);
+		Screen_0();
+		if (!CUR_USER->GetLvl())
+		{
+			Screen_1();
+		}
+		else
+		{
+			Screen_2();
+		}
 	}
-	fout_bin.close();
-#pragma endregion
-
-#pragma region Загрузка файла сотрудников
-
-	fout_bin.open(EMP, ios_base::in);
-
-	item_count = 0;
-	fout_bin >> item_count;
-	fout_bin.ignore();
-
-	
-	Employee tmp_employee{};
-	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
-	{
-		fout_bin.read((char*)&tmp_employee, sizeof(Employee));
-		EMPLOYEE.push_back(tmp_employee);
-	}
-	fout_bin.close();
-#pragma endregion
-
-#pragma region Загрузка файла карт
-
-	fout_bin.open(ACC, ios_base::in);
-
-	item_count = 0;
-	fout_bin >> item_count;
-	fout_bin.ignore();
-
-	Account tmp_account{};
-	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
-	{
-		fout_bin.read((char*)&tmp_account, sizeof(Account));
-		ACCOUNT.push_back(tmp_account);
-	}
-	fout_bin.close();
-#pragma endregion
-
-	Screen_0();
-	if (!CUR_USER->GetLvl())
-	{
-		Screen_1();
-	}
-	else
-	{
-		Screen_2();
-	}
-	
 	
 	system("pause");
 	return 0;
@@ -198,19 +157,19 @@ void Screen_0()
 {
 #pragma region заполнение массива пунктов меню авторизации
 
-	fout_bin.open(MENU_AUTH);
+	FIN_TXT.open(MENU_AUTH);
 
 	size_t item_count_1{};
-	fout_bin >> item_count_1;
-	fout_bin.ignore();
+	FIN_TXT >> item_count_1;
+	FIN_TXT.ignore();
 
 	ItemMenu* items_1 = new ItemMenu[item_count_1]{};
-	for (int i = 0; i < item_count_1 && fout_bin.is_open(); i++)
+	for (int i = 0; i < item_count_1 && FIN_TXT.is_open(); i++)
 	{
-		fout_bin.getline(buff, 1023);
+		FIN_TXT.getline(buff, 1023);
 		items_1[i].SetItemName(buff);
 	}
-	fout_bin.close();
+	FIN_TXT.close();
 
 
 	items_1[0].SetFunc(AddClient);
@@ -234,6 +193,7 @@ void Screen_0()
 #pragma region функции меню клиента
 int EditUser()
 {
+	CUR_USER->PrintParent();
 	cout << "\tВведите новые данные" << endl;
 	CUR_USER->In();
 	cout << "Данные успешно изменены" << endl;
@@ -241,12 +201,18 @@ int EditUser()
 }
 int OutputAcc()
 {
+	bool have = false;
 	for (int i = 0; i < ACCOUNT.size(); i++)
 	{
 		if (ACCOUNT[i].GetIdOwner() == CUR_USER->GetId())
 		{
 			ACCOUNT[i].Print();
+			have = true;
 		}
+	}
+	if (!have)
+	{
+		cout << "У вас нет карт" << endl;
 	}
 	return 0;
 }
@@ -257,34 +223,58 @@ int AddAcc()
 	ACCOUNT.push_back(tmp_acc);
 	return 0;
 }
-int DelAcc()
+int DelAcc(/*Не работает*/)
 {
 	cout << "Введите номер карты, которую хотите удалить" <<
 		"\nПредупреждаем, все данные карты будут удалены. Снимите предварительно деньги в банкомате." << endl;
 	size_t id;
 	cin >> id;
-	ACCOUNT.erase(ACCOUNT.begin() +id);
+	// поиск номера элемента с заданным id
+	bool have = false;
+	for (size_t i = 0; i < ACCOUNT.size(); ++i)
+	{
+		if (ACCOUNT[i].GetId() == id)
+		{
+			have = true;
+			id = i;
+			break;
+		}
+	}
+	//удаление. Хуйня а не удаление. Тоже не работает
+	if (!have)
+	{
+		cout << "Нет карты с таким индексом" << endl;
+	}
+	else
+	{
+		for (size_t i = id; i < ACCOUNT.size() - 1; ++i)
+		{
+			ACCOUNT[i] = ACCOUNT[i + 1];
+		}
+		ACCOUNT.pop_back();
+	}
+	ACCOUNT.erase(ACCOUNT.begin() +id-1);
 	return 0;
 }
-int DelCli()
+int DelCli(/*Не работает*/)
 {
-	size_t id{};
-	for (int i = 0; i < CLIENT.size() && (CUR_USER->GetId() == CLIENT[i].GetId()); i++)
+	size_t id = CUR_USER->GetId();
+	for (int i = 0; i < CLIENT.size(); i++)
 	{
-		//if (CUR_USER->GetId() == CLIENT[i].GetId()) на случай если наебнется
-		//{
-			id = CUR_USER->GetId();
-			CLIENT.erase(CLIENT.begin() + id);
-			CUR_USER = nullptr;
+		if (id == CLIENT[i].GetId())
+		{
+			CLIENT.erase(CLIENT.begin() + id-1);
 			cout << "Пользователь успешно удален" << endl;
+			VerifyOut();
 			break;
-		//}
+		}
 	}
 	return 0;
 }
 int VerifyOut()
 {
 	CUR_USER = nullptr;
+	system("cls");
 	return 0;
 }
 #pragma endregion
@@ -340,16 +330,16 @@ int ListCli()
 int DelEmp()
 {
 	size_t id{};
-	for (int i = 0; i < CLIENT.size() && (CUR_USER->GetId() == CLIENT[i].GetId()); i++)
+	for (int i = 0; i < CLIENT.size(); i++)
 	{
-		//if (CUR_USER->GetId() == CLIENT[i].GetId()) на случай если наебнется
-		//{
+		if (CUR_USER->GetId() == CLIENT[i].GetId())// на случай если наебнется
+		{
 		id = CUR_USER->GetId();
 		CLIENT.erase(CLIENT.begin() + id);
 		CUR_USER = nullptr;
 		cout << "Пользователь успешно удален" << endl;
 		break;
-		//}
+		}
 	}
 	return 0;
 }
@@ -440,12 +430,69 @@ void Screen_3()
 #pragma endregion
 }
 
+
+
+void Begin()
+{
+	ifstream fout_bin;
+#pragma region Загрузка файла клиентов
+
+	fout_bin.open(CLI, ios_base::in);
+
+	size_t item_count{};
+	fout_bin >> item_count;
+	fout_bin.ignore();
+
+
+	Client tmp_client{};
+	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	{
+		fout_bin.read((char*)&tmp_client, sizeof(Client));
+		CLIENT.push_back(tmp_client);
+	}
+	fout_bin.close();
+#pragma endregion
+#pragma region Загрузка файла сотрудников
+
+	fout_bin.open(EMP, ios_base::in);
+
+	item_count = 0;
+	fout_bin >> item_count;
+	fout_bin.ignore();
+
+
+	Employee tmp_employee{};
+	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	{
+		fout_bin.read((char*)&tmp_employee, sizeof(Employee));
+		EMPLOYEE.push_back(tmp_employee);
+	}
+	fout_bin.close();
+#pragma endregion
+#pragma region Загрузка файла карт
+
+	fout_bin.open(ACC, ios_base::in);
+
+	item_count = 0;
+	fout_bin >> item_count;
+	fout_bin.ignore();
+
+	Account tmp_account{};
+	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	{
+		fout_bin.read((char*)&tmp_account, sizeof(Account));
+		ACCOUNT.push_back(tmp_account);
+	}
+	fout_bin.close();
+#pragma endregion
+}
 void Save()
 {
 	ofstream fout_bin{};
 #pragma region Загрузка файла клиентов
 
 	fout_bin.open(CLI, ios_base::out);
+	fout_bin.clear();
 	//fout_bin.clear(); если будут дублироваться записи
 	for (int i = 0; i < CLIENT.size() && fout_bin.is_open(); i++)
 	{
@@ -457,6 +504,7 @@ void Save()
 #pragma region Загрузка файла сотрудников
 
 	fout_bin.open(EMP, ios_base::out);
+	fout_bin.clear();
 
 	for (int i = 0; i < EMPLOYEE.size() && fout_bin.is_open(); i++)
 	{
@@ -468,6 +516,7 @@ void Save()
 #pragma region Загрузка файла карт
 
 	fout_bin.open(ACC, ios_base::out);
+	fout_bin.clear();
 
 	for (int i = 0; i < ACCOUNT.size() && fout_bin.is_open(); i++)
 	{

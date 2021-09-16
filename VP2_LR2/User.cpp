@@ -52,9 +52,11 @@ string User::OutLvl()
 }
 void User::PrintParent() const
 {
+	cout << "\t\t" << "Текущие данные пользователя" << endl;
 	//cout << OutLvl();
 	cout << "ID пользователя - " << m_id << endl;
 	cout << "Имя пользователя - " << m_name << endl;
+	cout << "Логин пользователя - " << m_login << endl;
 }
 ostream& operator<<(ostream& out, const User& man)
 {
