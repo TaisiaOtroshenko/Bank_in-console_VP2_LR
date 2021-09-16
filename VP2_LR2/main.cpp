@@ -20,7 +20,7 @@ MENU_CLI = "menu_client.txt",
 MENU_EMP = "menu_employee.txt",
 MENU_LIST = "menu_list.txt";
 
-ifstream FIN_BIN, FIN_TXT;
+ifstream fout_bin, FIN_TXT;
 char* buff = new char[1024]{};
 
 vector <Client> CLIENT{};
@@ -60,61 +60,63 @@ void Screen_2();
 void Screen_3();
 
 
+void Save();
+
 int main()
 {
 	setlocale(0, "");
 
 #pragma region Загрузка файла клиентов
 	
-	FIN_BIN.open(CLI, ios_base::in);
+	fout_bin.open(CLI, ios_base::in);
 
 	size_t item_count{};
-	FIN_BIN >> item_count;
-	FIN_BIN.ignore();
+	fout_bin >> item_count;
+	fout_bin.ignore();
 
 	
 	Client tmp_client{};
-	for (int i = 0; i < item_count && FIN_BIN.is_open(); i++)
+	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
 	{
-		FIN_BIN.read((char*)&tmp_client, sizeof(Client));
+		fout_bin.read((char*)&tmp_client, sizeof(Client));
 		CLIENT.push_back(tmp_client);
 	}
-	FIN_BIN.close();
+	fout_bin.close();
 #pragma endregion
 
 #pragma region Загрузка файла сотрудников
 
-	FIN_BIN.open(EMP, ios_base::in);
+	fout_bin.open(EMP, ios_base::in);
 
 	item_count = 0;
-	FIN_BIN >> item_count;
-	FIN_BIN.ignore();
+	fout_bin >> item_count;
+	fout_bin.ignore();
 
 	
 	Employee tmp_employee{};
-	for (int i = 0; i < item_count && FIN_BIN.is_open(); i++)
+	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
 	{
-		FIN_BIN.read((char*)&tmp_employee, sizeof(Employee));
+		fout_bin.read((char*)&tmp_employee, sizeof(Employee));
 		EMPLOYEE.push_back(tmp_employee);
 	}
-	FIN_BIN.close();
+	fout_bin.close();
 #pragma endregion
 
 #pragma region Загрузка файла карт
 
-	FIN_BIN.open(ACC, ios_base::in);
+	fout_bin.open(ACC, ios_base::in);
 
 	item_count = 0;
-	FIN_BIN >> item_count;
-	FIN_BIN.ignore();
+	fout_bin >> item_count;
+	fout_bin.ignore();
 
 	Account tmp_account{};
-	for (int i = 0; i < item_count && FIN_BIN.is_open(); i++)
+	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
 	{
-		FIN_BIN.read((char*)&tmp_account, sizeof(Account));
+		fout_bin.read((char*)&tmp_account, sizeof(Account));
 		ACCOUNT.push_back(tmp_account);
 	}
-	FIN_BIN.close();
+	fout_bin.close();
 #pragma endregion
 
 	Screen_0();
@@ -196,19 +198,19 @@ void Screen_0()
 {
 #pragma region заполнение массива пунктов меню авторизации
 
-	FIN_BIN.open(MENU_AUTH);
+	fout_bin.open(MENU_AUTH);
 
 	size_t item_count_1{};
-	FIN_BIN >> item_count_1;
-	FIN_BIN.ignore();
+	fout_bin >> item_count_1;
+	fout_bin.ignore();
 
 	ItemMenu* items_1 = new ItemMenu[item_count_1]{};
-	for (int i = 0; i < item_count_1 && FIN_BIN.is_open(); i++)
+	for (int i = 0; i < item_count_1 && fout_bin.is_open(); i++)
 	{
-		FIN_BIN.getline(buff, 1023);
+		fout_bin.getline(buff, 1023);
 		items_1[i].SetItemName(buff);
 	}
-	FIN_BIN.close();
+	fout_bin.close();
 
 
 	items_1[0].SetFunc(AddClient);
@@ -217,7 +219,7 @@ void Screen_0()
 #pragma endregion
 #pragma region вызов меню авторизции
 
-	CMenu menu_auth = CMenu("Меню входа", items_1, item_count_1);
+	CMenu menu_auth = CMenu("Меню входа", items_1, item_count_1, Save);
 
 	while (CUR_USER == nullptr)
 	{
@@ -315,7 +317,7 @@ void Screen_1()
 #pragma endregion
 #pragma region вызов меню клиента
 
-	CMenu menu_cli = CMenu("Меню клиента", item, item_count);
+	CMenu menu_cli = CMenu("Меню клиента", item, item_count, Save);
 
 	while (CUR_USER != nullptr)
 	{
@@ -375,7 +377,7 @@ void Screen_2()
 	item[4].SetFunc(VerifyOut);
 #pragma endregion
 #pragma region вызов меню сотрудника
-CMenu menu_emp = CMenu("Меню сотрудника", item, item_count);
+CMenu menu_emp = CMenu("Меню сотрудника", item, item_count, Save);
 	while (CUR_USER!=nullptr)
 	{
 		cout << menu_emp;
@@ -429,7 +431,7 @@ void Screen_3()
 	item[5].SetFunc(VerifyOut);
 #pragma endregion
 #pragma region вызов меню списков
-	CMenu menu_list = CMenu("Меню списка", item, item_count);
+	CMenu menu_list = CMenu("Меню списка", item, item_count, Save);
 	while (CUR_USER != nullptr) //нужно условие перехода на предыдущий экран
 	{
 		cout << menu_list;
@@ -438,3 +440,39 @@ void Screen_3()
 #pragma endregion
 }
 
+void Save()
+{
+	ofstream fout_bin{};
+#pragma region Загрузка файла клиентов
+
+	fout_bin.open(CLI, ios_base::out);
+	//fout_bin.clear(); если будут дублироваться записи
+	for (int i = 0; i < CLIENT.size() && fout_bin.is_open(); i++)
+	{
+		fout_bin.write((char*)&CLIENT[i], sizeof(Client));
+	}
+	fout_bin.close();
+#pragma endregion
+
+#pragma region Загрузка файла сотрудников
+
+	fout_bin.open(EMP, ios_base::out);
+
+	for (int i = 0; i < EMPLOYEE.size() && fout_bin.is_open(); i++)
+	{
+		fout_bin.write((char*)&EMPLOYEE[i], sizeof(Employee));
+	}
+	fout_bin.close();
+#pragma endregion
+
+#pragma region Загрузка файла карт
+
+	fout_bin.open(ACC, ios_base::out);
+
+	for (int i = 0; i < ACCOUNT.size() && fout_bin.is_open(); i++)
+	{
+		fout_bin.write((char*)&ACCOUNT[i], sizeof(Account));
+	}
+	fout_bin.close();
+#pragma endregion
+}

@@ -4,12 +4,13 @@
 using namespace std;
 namespace otv
 {
-    CMenu::CMenu(string title, ItemMenu* items, size_t item_count)
+    CMenu::CMenu(string title, ItemMenu* items, size_t item_count, void_func func_save)
     {
         // CMenu::CMenu(char *title, ItemMenu *items, int itemCount) : m_title(title), m_items(items), m_count(count) {}
         m_title = title;
         m_items = items;
         m_count = item_count;
+        m_func_save = func_save;
     }
 #pragma region GetSet
     int CMenu::GetSelect() const
@@ -51,6 +52,7 @@ namespace otv
         cin >> m_select;
         if (m_select == 0)
         {
+            m_func_save();
             exit(0);
         }
         m_items[m_select - 1].Run();
@@ -64,6 +66,7 @@ namespace otv
     istream& operator>> (istream& in, CMenu& m)
     {
         m.RunCommand();
+        cout << endl;
         return in;
     }
 }

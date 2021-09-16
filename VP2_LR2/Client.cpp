@@ -30,11 +30,11 @@ Client Client::operator=(Client a)
 }
 void Client::In()
 {
-	cout << "¬ведите логин:	";
+	cout << "¬ведите логин: ";
 	cin >> m_login;
-	cout << "\n¬ведите пароль:	";
+	cout << "¬ведите пароль: ";
 	cin >> m_pass;
-	cout << "\n¬ведите им€:	";
+	cout << "¬ведите им€: ";
 	cin >> m_name;
 }
 bool operator> (const Client& a, const Client& b)

@@ -35,8 +35,8 @@
 *.suo
 *.db
 *.ipch
-.vs/VP2_LR2/v16/.suo
-.vs/VP2_LR2/v16/Browse.VC.db
+*.vs/VP2_LR2/v16/.suo
+*.vs/VP2_LR2/v16/Browse.VC.db
 VP2_LR2/VP2_LR2.vcxproj.filters
 *.pdb
-.vs/VP2_LR2/v16/.suo
+*.vs/VP2_LR2/v16/.suo

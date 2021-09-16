@@ -36,12 +36,9 @@ size_t User::GetId()
 
 void User::In()
 {
-	cout << "Enter login:	";
-	
+	cout << "Введите логин:	";
 	cin >> m_login;
-
-	cout << "\nEnter password:	";
-
+	cout << "Введите пароль: ";
 	cin >> m_pass;
 }
 
@@ -55,7 +52,7 @@ string User::OutLvl()
 }
 void User::PrintParent() const
 {
-	//OutLvl();
+	//cout << OutLvl();
 	cout << "ID пользователя - " << m_id << endl;
 	cout << "Имя пользователя - " << m_name << endl;
 }
