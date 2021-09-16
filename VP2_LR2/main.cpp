@@ -6,7 +6,7 @@
 #include "Client.h"
 #include "Employee.h"
 #include "Account.h"
-//#include "Func.h"
+#include "Func.h"
 
 using namespace std;
 using namespace otv;
@@ -23,7 +23,7 @@ MENU_LIST = "menu_list.txt";
 ifstream FIN_BIN, FIN_TXT;
 char* buff = new char[1024]{};
 
-vector<Client> CLIENT{};
+vector <Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
 vector <Account> ACCOUNT{};
 User* CUR_USER{};
@@ -35,13 +35,16 @@ int Verify();
 
 
 int EditUser();
+
 int OutputAcc();
 int AddAcc();
 int DelAcc();
 int DelCli();
 
-int EditEmp();
+int ListAcc();
+int ListCli();
 int DelEmp();
+
 int VerifyOut();
 
 int AddIt();
@@ -105,8 +108,7 @@ int main()
 	FIN_BIN >> item_count;
 	FIN_BIN.ignore();
 
-
-	Account tmp_account(CUR_USER->GetId());
+	Account tmp_account{};
 	for (int i = 0; i < item_count && FIN_BIN.is_open(); i++)
 	{
 		FIN_BIN.read((char*)&tmp_account, sizeof(Account));
@@ -125,10 +127,10 @@ int main()
 		Screen_2();
 	}
 	
+	
 	system("pause");
 	return 0;
 }
-
 
 
 #pragma region функции меню авторизации
@@ -220,10 +222,11 @@ void Screen_0()
 	while (CUR_USER == nullptr)
 	{
 		cout << menu_auth;
-		menu_auth.RunCommand();
+		cin >> menu_auth;
 	}
 #pragma endregion
 }
+
 
 
 #pragma region функции меню клиента
@@ -255,7 +258,7 @@ int AddAcc()
 int DelAcc()
 {
 	cout << "Введите номер карты, которую хотите удалить" <<
-		"\nПредупреждаем, данные карты будут полностью удалены. Снимите предварительно деньги в банкомате." << endl;
+		"\nПредупреждаем, все данные карты будут удалены. Снимите предварительно деньги в банкомате." << endl;
 	size_t id;
 	cin >> id;
 	ACCOUNT.erase(ACCOUNT.begin() +id);
@@ -317,14 +320,37 @@ void Screen_1()
 	while (CUR_USER != nullptr)
 	{
 		cout << menu_cli;
-		menu_cli.RunCommand();
+		cin >> menu_cli;
 	}
 #pragma endregion
 }
 
 
 #pragma region функции меню сотрудника
-
+int ListAcc()
+{
+	return 0;
+}
+int ListCli()
+{
+	return 0;
+}
+int DelEmp()
+{
+	size_t id{};
+	for (int i = 0; i < CLIENT.size() && (CUR_USER->GetId() == CLIENT[i].GetId()); i++)
+	{
+		//if (CUR_USER->GetId() == CLIENT[i].GetId()) на случай если наебнется
+		//{
+		id = CUR_USER->GetId();
+		CLIENT.erase(CLIENT.begin() + id);
+		CUR_USER = nullptr;
+		cout << "Пользователь успешно удален" << endl;
+		break;
+		//}
+	}
+	return 0;
+}
 #pragma endregion
 void Screen_2()
 {
@@ -342,12 +368,11 @@ void Screen_2()
 	}
 	FIN_TXT.close();
 
-	item[0].SetFunc(AddIt);
-	item[1].SetFunc(DelIt);
-	item[2].SetFunc(EditIt);
-	item[3].SetFunc(SortIt);
-	item[4].SetFunc(FilterIt);
-	item[5].SetFunc(VerifyOut);
+	item[0].SetFunc(EditUser);
+	item[1].SetFunc(ListAcc);
+	item[2].SetFunc(ListCli);
+	item[3].SetFunc(DelEmp);
+	item[4].SetFunc(VerifyOut);
 #pragma endregion
 #pragma region вызов меню сотрудника
 CMenu menu_emp = CMenu("Меню сотрудника", item, item_count);
@@ -358,7 +383,6 @@ CMenu menu_emp = CMenu("Меню сотрудника", item, item_count);
 	}
 #pragma endregion
 }
-
 
 
 #pragma region функции меню работы со списками
@@ -377,6 +401,9 @@ int SortIt() {
 int FilterIt() {
 	return 0;
 };
+int ListOut() {
+	return 0;
+}
 #pragma endregion
 void Screen_3()
 {
@@ -410,3 +437,4 @@ void Screen_3()
 	}
 #pragma endregion
 }
+

@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
 template<typename Type>
-
 void Sort(Type* arr);
 
 template<typename Type, typename T>

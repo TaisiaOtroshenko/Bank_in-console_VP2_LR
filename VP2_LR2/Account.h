@@ -11,6 +11,7 @@ class Account
 	char* m_date;
 	unsigned long m_balance{};
 public:
+	Account();
 	Account(size_t id_owner);
 
 	size_t GetIdOwner();

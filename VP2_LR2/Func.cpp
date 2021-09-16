@@ -47,7 +47,7 @@ void Add(Type* arr)
 	arr.push_back(tmp);
 }
 
-template<typename Type, typename T>
+template<typename Type>
 void Edit(Type* arr, size_t index)
 {
 	Type tmp{};

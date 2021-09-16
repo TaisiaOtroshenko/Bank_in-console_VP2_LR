@@ -4,6 +4,12 @@ using namespace std;
 
 //ввод элемента;
 
+Account::Account()
+{
+	m_id = ID_account++;
+	time_t now = time(0);
+	m_date = ctime(&now);
+}
 Account::Account(size_t id_owner)
 {
 	m_id_owner = id_owner;

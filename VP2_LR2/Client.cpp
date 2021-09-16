@@ -17,7 +17,7 @@ void Client::Print() const
 }
 
 
-/*Client Client::operator=(Client a)
+Client Client::operator=(Client a)
 {
 	m_id = a.m_id;
 	m_lvl = a.m_lvl;
@@ -26,7 +26,8 @@ void Client::Print() const
 	m_login = a.m_login;
 	m_pass = a.m_pass;
 	//m_cards = a.m_cards;
-}*/
+	return *this;
+}
 void Client::In()
 {
 	cout << "¬ведите логин:	";

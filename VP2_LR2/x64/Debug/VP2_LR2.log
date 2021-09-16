@@ -1,4 +1,2 @@
 ﻿  main.cpp
-  LINK : не найден или не выполнена сборка C:\Users\tytsy\Desktop\VP2_LR-8875859f4303c2486a53d5af5a4d647f690e03ab\x64\Debug\VP2_LR2.exe при последней инкрементной компоновке; выполняется полная компоновка
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "public: class Client __cdecl Client::operator=(class Client)" (??4Client@@QEAA?AV0@V0@@Z) в функции "class Client * __cdecl std::_Move_unchecked<class Client *,class Client *>(class Client *,class Client *,class Client *)" (??$_Move_unchecked@PEAVClient@@PEAV1@@std@@YAPEAVClient@@PEAV1@00@Z).
-C:\Users\tytsy\Desktop\VP2_LR-8875859f4303c2486a53d5af5a4d647f690e03ab\x64\Debug\VP2_LR2.exe : fatal error LNK1120: неразрешенных внешних элементов: 1
+  VP2_LR2.vcxproj -> C:\Users\tytsy\Desktop\VP2_LR-8875859f4303c2486a53d5af5a4d647f690e03ab\x64\Debug\VP2_LR2.exe
