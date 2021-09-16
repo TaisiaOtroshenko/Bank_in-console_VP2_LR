@@ -4,16 +4,28 @@ using namespace std;
 
 //ввод элемента;
 
-Account::Account()
+Account::Account(size_t id_owner)
 {
+	m_id_owner = id_owner;
+	m_id = ID_account++;
 	time_t now = time(0);
 	m_date = ctime(&now);
 }
+size_t Account::GetIdOwner()
+{
+	return m_id_owner;
+}
 
-void Account::Trans(Account scd, int summ_tr)
+/*void Account::Trans(Account scd, int summ_tr)
 {
 	m_balance -= summ_tr;
 	scd.m_balance += summ_tr;
+}*/
+
+void Account::In()
+{
+	cout << "¬ведите им€ карты: " << endl;
+	cin >> m_name;
 }
 
 void Account::Print() const

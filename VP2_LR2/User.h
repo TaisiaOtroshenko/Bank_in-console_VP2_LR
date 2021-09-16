@@ -14,10 +14,13 @@ protected:
 	string m_name{};
 
 public:
-	string getLogin();
-	string getPassword();
 	
 	User();
+	string GetLogin();
+	string GetPass();
+	bool GetLvl();
+	size_t GetId();
+
 	void In();
 	string OutLvl();
 	virtual void PrintParent() const;
