@@ -231,7 +231,7 @@ int DelAcc(/*Не работает*/)
 	cin >> id;
 	// поиск номера элемента с заданным id
 	bool have = false;
-	for (size_t i = 0; i < ACCOUNT.size(); ++i)
+	for (size_t i = 0; i < ACCOUNT.size(); i++)
 	{
 		if (ACCOUNT[i].GetId() == id)
 		{
@@ -247,24 +247,21 @@ int DelAcc(/*Не работает*/)
 	}
 	else
 	{
-		for (size_t i = id; i < ACCOUNT.size() - 1; ++i)
-		{
-			ACCOUNT[i] = ACCOUNT[i + 1];
-		}
-		ACCOUNT.pop_back();
+			CLIENT.erase(CLIENT.begin() + (id - 1));
+			cout << "Карта удалена" << endl;
 	}
-	ACCOUNT.erase(ACCOUNT.begin() +id-1);
 	return 0;
 }
-int DelCli(/*Не работает*/)
+int DelCli()
 {
 	size_t id = CUR_USER->GetId();
 	for (int i = 0; i < CLIENT.size(); i++)
 	{
 		if (id == CLIENT[i].GetId())
 		{
-			CLIENT.erase(CLIENT.begin() + id-1);
+			CLIENT.erase(CLIENT.begin() + (id-1001));
 			cout << "Пользователь успешно удален" << endl;
+			system("pause");
 			VerifyOut();
 			break;
 		}
@@ -434,56 +431,56 @@ void Screen_3()
 
 void Begin()
 {
-	ifstream fout_bin;
+	ifstream fin_bin;
 #pragma region Загрузка файла клиентов
 
-	fout_bin.open(CLI, ios_base::in);
+	fin_bin.open(CLI, ios_base::in | ios::binary);
 
 	size_t item_count{};
-	fout_bin >> item_count;
-	fout_bin.ignore();
+	fin_bin >> item_count;
+	fin_bin.ignore();
 
 
 	Client tmp_client{};
-	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	for (int i = 0; i < item_count && fin_bin.is_open(); i++)
 	{
-		fout_bin.read((char*)&tmp_client, sizeof(Client));
+		fin_bin.read((char*)&tmp_client, sizeof(Client));
 		CLIENT.push_back(tmp_client);
 	}
-	fout_bin.close();
+	fin_bin.close();
 #pragma endregion
 #pragma region Загрузка файла сотрудников
 
-	fout_bin.open(EMP, ios_base::in);
+	fin_bin.open(EMP, ios_base::in | ios::binary);
 
 	item_count = 0;
-	fout_bin >> item_count;
-	fout_bin.ignore();
+	fin_bin >> item_count;
+	fin_bin.ignore();
 
 
 	Employee tmp_employee{};
-	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	for (int i = 0; i < item_count && fin_bin.is_open(); i++)
 	{
-		fout_bin.read((char*)&tmp_employee, sizeof(Employee));
+		fin_bin.read((char*)&tmp_employee, sizeof(Employee));
 		EMPLOYEE.push_back(tmp_employee);
 	}
-	fout_bin.close();
+	fin_bin.close();
 #pragma endregion
 #pragma region Загрузка файла карт
 
-	fout_bin.open(ACC, ios_base::in);
+	fin_bin.open(ACC, ios_base::in | ios::binary);
 
 	item_count = 0;
-	fout_bin >> item_count;
-	fout_bin.ignore();
+	fin_bin >> item_count;
+	fin_bin.ignore();
 
 	Account tmp_account{};
-	for (int i = 0; i < item_count && fout_bin.is_open(); i++)
+	for (int i = 0; i < item_count && fin_bin.is_open(); i++)
 	{
-		fout_bin.read((char*)&tmp_account, sizeof(Account));
+		fin_bin.read((char*)&tmp_account, sizeof(Account));
 		ACCOUNT.push_back(tmp_account);
 	}
-	fout_bin.close();
+	fin_bin.close();
 #pragma endregion
 }
 void Save()
@@ -491,7 +488,7 @@ void Save()
 	ofstream fout_bin{};
 #pragma region Загрузка файла клиентов
 
-	fout_bin.open(CLI, ios_base::out);
+	fout_bin.open(CLI, ios_base::out | ios::binary);
 	fout_bin.clear();
 	//fout_bin.clear(); если будут дублироваться записи
 	for (int i = 0; i < CLIENT.size() && fout_bin.is_open(); i++)
@@ -503,7 +500,7 @@ void Save()
 
 #pragma region Загрузка файла сотрудников
 
-	fout_bin.open(EMP, ios_base::out);
+	fout_bin.open(EMP, ios_base::out | ios::binary);
 	fout_bin.clear();
 
 	for (int i = 0; i < EMPLOYEE.size() && fout_bin.is_open(); i++)
@@ -515,7 +512,7 @@ void Save()
 
 #pragma region Загрузка файла карт
 
-	fout_bin.open(ACC, ios_base::out);
+	fout_bin.open(ACC, ios_base::out | ios::binary);
 	fout_bin.clear();
 
 	for (int i = 0; i < ACCOUNT.size() && fout_bin.is_open(); i++)
