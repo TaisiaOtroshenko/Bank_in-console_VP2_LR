@@ -3,9 +3,9 @@
 
 Employee::Employee()
 {
-	m_id = ID_user++;
-	time_t now = time(0);
-	m_date = ctime(&now);
+	//m_id = ID_user++;
+	//time_t now = time(0);
+	//m_date = ctime(&now);
 	m_lvl = true;
 }
 

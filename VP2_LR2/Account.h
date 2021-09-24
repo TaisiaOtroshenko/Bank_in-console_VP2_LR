@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 using namespace std;
-static size_t ID_account = 10000000000;
+static size_t ID_account = 12301230;
 
 class Account
 {

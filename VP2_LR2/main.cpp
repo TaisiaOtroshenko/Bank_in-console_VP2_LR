@@ -1,4 +1,6 @@
+//лябудутестером
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <vector>
 
@@ -34,17 +36,19 @@ User* CUR_USER{};
 #pragma region Список функций (.h)
 
 //Работает на достаточном уровне
-int AddClient();
+int AddClient(/*Работает с ошибкой - присвоение id при перезапуске программы все еще начинается с начального значения
+									- возможно создание пользователя с тем же именем*/);
 int AddEmployee();
 int Verify();
 
 //Работает на достаточном уровне
 int EditUser();
 
+//Работает на достаточном уровне
 int OutputAcc(/*Работает с ошибкой - время*/);
 int AddAcc(); 
-int DelAcc(/*Не работает - удаление в векторе*/);
-int DelCli(/*Не работает - удаление в векторе*/);
+int DelAcc();
+int DelCli();
 
 int ListAcc();
 int ListCli();
@@ -66,8 +70,8 @@ void Screen_1();
 void Screen_2();
 void Screen_3();
 
-void Begin();
-void Save(/*Не работает*/);
+void Begin(/*вылетает*/);
+void Save();
 #pragma endregion
 
 int main()
@@ -189,7 +193,6 @@ void Screen_0()
 }
 
 
-
 #pragma region функции меню клиента
 int EditUser()
 {
@@ -223,47 +226,37 @@ int AddAcc()
 	ACCOUNT.push_back(tmp_acc);
 	return 0;
 }
-int DelAcc(/*Не работает*/)
+int DelAcc()
 {
-	cout << "Введите номер карты, которую хотите удалить" <<
-		"\nПредупреждаем, все данные карты будут удалены. Снимите предварительно деньги в банкомате." << endl;
-	size_t id;
-	cin >> id;
-	// поиск номера элемента с заданным id
-	bool have = false;
-	for (size_t i = 0; i < ACCOUNT.size(); i++)
+	size_t id_acc{};
+	size_t id_owner = CUR_USER->GetId();
+	cout << "\nВведите id карточки, которую хотите удалить:" << endl;
+	cin >> id_acc;
+	for (int i = 0; i < ACCOUNT.size(); ++i)
 	{
-		if (ACCOUNT[i].GetId() == id)
+		if (id_owner == ACCOUNT[i].GetIdOwner() && id_acc == ACCOUNT[i].GetId())
 		{
-			have = true;
-			id = i;
+			ACCOUNT.erase(ACCOUNT.begin() + i);
+			cout << "Ваша карта успешно удалена" << endl;
+			system("pause");
+			VerifyOut();
 			break;
 		}
-	}
-	//удаление. Хуйня а не удаление. Тоже не работает
-	if (!have)
-	{
-		cout << "Нет карты с таким индексом" << endl;
-	}
-	else
-	{
-			CLIENT.erase(CLIENT.begin() + (id - 1));
-			cout << "Карта удалена" << endl;
 	}
 	return 0;
 }
 int DelCli()
 {
 	size_t id = CUR_USER->GetId();
-	for (int i = 0; i < CLIENT.size(); i++)
+	for (int i = 0; i < CLIENT.size(); ++i)
 	{
 		if (id == CLIENT[i].GetId())
 		{
-			CLIENT.erase(CLIENT.begin() + (id-1001));
-			cout << "Пользователь успешно удален" << endl;
-			system("pause");
-			VerifyOut();
-			break;
+CLIENT.erase(CLIENT.begin() + i);
+		cout << "Пользователь успешно удален" << endl;
+		system("pause");
+		VerifyOut();
+		break;
 		}
 	}
 	return 0;
@@ -428,21 +421,18 @@ void Screen_3()
 }
 
 
-
 void Begin()
 {
+	/*
 	ifstream fin_bin;
+	int tmp_size{};
 #pragma region Загрузка файла клиентов
 
 	fin_bin.open(CLI, ios_base::in | ios::binary);
-
-	size_t item_count{};
-	fin_bin >> item_count;
-	fin_bin.ignore();
-
-
+	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Client tmp_client{};
-	for (int i = 0; i < item_count && fin_bin.is_open(); i++)
+
+	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
 	{
 		fin_bin.read((char*)&tmp_client, sizeof(Client));
 		CLIENT.push_back(tmp_client);
@@ -452,14 +442,10 @@ void Begin()
 #pragma region Загрузка файла сотрудников
 
 	fin_bin.open(EMP, ios_base::in | ios::binary);
-
-	item_count = 0;
-	fin_bin >> item_count;
-	fin_bin.ignore();
-
-
+	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Employee tmp_employee{};
-	for (int i = 0; i < item_count && fin_bin.is_open(); i++)
+
+	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
 	{
 		fin_bin.read((char*)&tmp_employee, sizeof(Employee));
 		EMPLOYEE.push_back(tmp_employee);
@@ -469,56 +455,67 @@ void Begin()
 #pragma region Загрузка файла карт
 
 	fin_bin.open(ACC, ios_base::in | ios::binary);
-
-	item_count = 0;
-	fin_bin >> item_count;
-	fin_bin.ignore();
-
+	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Account tmp_account{};
-	for (int i = 0; i < item_count && fin_bin.is_open(); i++)
+
+	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
 	{
 		fin_bin.read((char*)&tmp_account, sizeof(Account));
 		ACCOUNT.push_back(tmp_account);
 	}
 	fin_bin.close();
 #pragma endregion
-}
+	*/
+}//вылетает при завершении функции
+
 void Save()
 {
 	ofstream fout_bin{};
-#pragma region Загрузка файла клиентов
+	int tmp_size{};
+#pragma region Выгрузка клиентов в файл
 
-	fout_bin.open(CLI, ios_base::out | ios::binary);
+	fout_bin.open(CLI, ios::binary | ios::out);
 	fout_bin.clear();
-	//fout_bin.clear(); если будут дублироваться записи
-	for (int i = 0; i < CLIENT.size() && fout_bin.is_open(); i++)
+
+	tmp_size = CLIENT.size();
+
+	fout_bin.write((char*)&(tmp_size), sizeof(int));
+
+	for (int i = 0; i < tmp_size && fout_bin.is_open(); i++)
 	{
-		fout_bin.write((char*)&CLIENT[i], sizeof(Client));
+		fout_bin.write((char*)&(CLIENT[i]), sizeof(Client));
 	}
 	fout_bin.close();
 #pragma endregion
-
-#pragma region Загрузка файла сотрудников
+#pragma region Выгрузка сотрудников в файл
 
 	fout_bin.open(EMP, ios_base::out | ios::binary);
 	fout_bin.clear();
 
-	for (int i = 0; i < EMPLOYEE.size() && fout_bin.is_open(); i++)
+	tmp_size = EMPLOYEE.size();
+
+	fout_bin.write((char*)&(tmp_size), sizeof(int));
+
+	for (int i = 0; i < tmp_size && fout_bin.is_open(); i++)
 	{
-		fout_bin.write((char*)&EMPLOYEE[i], sizeof(Employee));
+		fout_bin.write((char*)&(EMPLOYEE[i]), sizeof(Employee));
 	}
 	fout_bin.close();
 #pragma endregion
-
-#pragma region Загрузка файла карт
+#pragma region Выгрузка карт в файл
 
 	fout_bin.open(ACC, ios_base::out | ios::binary);
 	fout_bin.clear();
 
-	for (int i = 0; i < ACCOUNT.size() && fout_bin.is_open(); i++)
+	tmp_size = ACCOUNT.size();
+
+	fout_bin.write((char*)&(tmp_size), sizeof(int));
+
+	for (int i = 0; i < tmp_size && fout_bin.is_open(); i++)
 	{
-		fout_bin.write((char*)&ACCOUNT[i], sizeof(Account));
+		fout_bin.write((char*)&(ACCOUNT[i]), sizeof(Account));
 	}
 	fout_bin.close();
 #pragma endregion
 }
+

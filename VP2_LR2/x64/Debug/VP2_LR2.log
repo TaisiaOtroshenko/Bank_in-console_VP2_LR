@@ -1,2 +1,7 @@
-﻿  main.cpp
+﻿  Account.cpp
+  main.cpp
+C:\Users\tytsy\Desktop\VP2_LR\VP2_LR2\main.cpp(478,26): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\tytsy\Desktop\VP2_LR\VP2_LR2\main.cpp(493,28): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\tytsy\Desktop\VP2_LR\VP2_LR2\main.cpp(508,27): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+  Создание кода...
   VP2_LR2.vcxproj -> C:\Users\tytsy\Desktop\VP2_LR\x64\Debug\VP2_LR2.exe
