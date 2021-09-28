@@ -3,13 +3,9 @@
 
 Employee::Employee()
 {
-	//m_id = ID_user++;
-	//time_t now = time(0);
-	//m_date = ctime(&now);
 	m_lvl = true;
 }
-
-void Employee::In() // &&& узнать, как заставить эту функцию вызывать .In класса-родителя User
+void Employee::In()
 {
 	cout << "Введите логин: ";
 	cin >> m_login;
@@ -18,16 +14,17 @@ void Employee::In() // &&& узнать, как заставить эту функцию вызывать .In класса
 	cout << "Введите имя: ";
 	cin >> m_name;
 }
-
 void Employee::Print() const
 {
-	cout << "\t\t" << "Текущие данные пользователя" << endl;
-	cout << "Тип пользователя - Сотрудник" << endl;
-	cout << "ID пользователя - " << m_id << endl;
-	cout << "Имя пользователя - " << m_name << endl;
+	PrintParent();
+
+	cout << "Имя - " << m_name << endl;
+	cout << "Пароль - " << m_pass << endl;
+
+	cout << "Дата создания -  " << m_date << endl;
 }
 
-/*Employee Employee:: operator=(Employee a)
+Employee Employee:: operator=(Employee a)
 {
 	m_id = a.m_id;
 	m_login = a.m_login;
@@ -36,17 +33,13 @@ void Employee::Print() const
 	m_name = a.m_name;
 	m_lvl = a.m_lvl;
 	m_salary = a.m_salary;
-	//m_salary_card = a.m_salary_card;
-}*/
-
+	return *this;
+}
 bool operator> (const Employee& a, const Employee& b)
 {
 	return a.m_name > b.m_name;
 }
-
 bool operator== (const Employee& a, const Employee& b)
 {
-	bool r{};
-	r = (a.m_login == b.m_login && a.m_pass == b.m_pass);
-	return r;
+	return (a.m_login == b.m_login && a.m_pass == b.m_pass);
 }

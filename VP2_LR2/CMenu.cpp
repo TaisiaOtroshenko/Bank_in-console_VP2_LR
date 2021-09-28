@@ -6,7 +6,6 @@ namespace otv
 {
     CMenu::CMenu(string title, ItemMenu* items, size_t item_count, void_func func_save)
     {
-        // CMenu::CMenu(char *title, ItemMenu *items, int itemCount) : m_title(title), m_items(items), m_count(count) {}
         m_title = title;
         m_items = items;
         m_count = item_count;
@@ -44,22 +43,29 @@ namespace otv
             m_items[i].Print();
             cout << endl;
         }
-        cout << "0. Exit" << endl;
+        cout << "0. Exit and save" << endl;
     }
     void CMenu::RunCommand()
     {
-        cout << "\n   Select >> ";
-        cin >> m_select; 
-        //  !!! Нужна обработка ввода. Эта не пашет
-        /*try
+        cout << "\n\tSelect >> ";
+        try
         {
-        cin >> m_select;
+            cin >> m_select; //почему все буквы записываются 0??
+            if (m_select <0 || m_select > m_count)
+            {
+                throw -1;
+            }
+        }
+        catch (int)
+        {
+            cerr << "Нет команды с таким номером. Попробуйте еще раз." << endl;
+            RunCommand();
         }
         catch (...)
         {
-            cout << "Неверный ввод" << endl;
-            system("pause");
-        }*/
+            cerr << "Неверный ввод. Попробуйте еще раз." << endl;
+            RunCommand();
+        }
         if (m_select == 0)
         {
             m_func_save();

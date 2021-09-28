@@ -34,7 +34,7 @@ size_t Account::GetIdOwner()
 
 void Account::In()
 {
-	cout << "¬ведите им€ карты: " << endl;
+	cout << "¬ведите им€ карты: ";
 	cin >> m_name;
 }
 

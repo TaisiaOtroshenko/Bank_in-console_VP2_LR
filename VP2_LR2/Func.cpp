@@ -1,7 +1,7 @@
 #include "Func.h"
 
 template<typename Type>
-void Sort(Type* arr)
+void Sort(vector <Type> arr)
 {
 	for (size_t i = 0; i < arr.size(); ++i)
 	{
@@ -17,21 +17,38 @@ void Sort(Type* arr)
 	}
 }
 
-template<typename Type, typename T>
-Type* Filter(Type* arr, T par)
+template<typename Type>
+void Filter(vector <Type> arr)
 {
-	vector <Type> filtred;
+	//выводит элементы массива с выбранным индексом
+	size_t par{};
+	cout << "\n¬ведите значение параметра (id) дл€ фильтрации:" << endl;
+	cin >> par;
+
 	for (size_t i = 0; i < arr.size(); ++i)
 	{
-		if (arr[i]==par)
-		filtred.push_back(arr[i]);
+		if (arr[i].m_id==par)
+		arr[i].Print();
 	}
-	return filtred;
 }
 
 template<typename Type>
-void Del(Type* arr, size_t id)
+void Del(vector<Type> arr)
 {
+	size_t id{};
+	cout << "\n¬ведите id элемента, который хотите удалить:" << endl;
+	cin >> id;
+
+	for (int i = 0; i < arr.size(); ++i)
+	{
+		if (id == arr[i].GetId())
+		{
+			arr.erase(arr.begin() + i);
+			cout << "Ёлемент успешно удален" << endl;
+			break;
+		}
+	}
+	/*
 	// поиск номера элемента с заданным id
 	bool have = false;
 	for (size_t i = 0; i < arr.size(); ++i)
@@ -56,22 +73,28 @@ void Del(Type* arr, size_t id)
 		}
 		arr.pop_back();
 	}
+	*/
 }
 
 template<typename Type>
-void Add(Type* arr)
+void Add(vector <Type> arr)
 {
 	Type tmp{};
+	tmp.In();
 	cin << tmp;
 	arr.push_back(tmp);
 }
 
 template<typename Type>
-void Edit(Type* arr, size_t index)
+void Edit(vector <Type> arr)
 {
+	size_t id{};
+	cout << "\n¬ведите id элемента, который хотите  редактировать:" << endl;
+	cin >> id;
+
 	Type tmp{};
-	cout << arr[index];
+	cout << arr[id];
 	cout << "¬едите новые данные" << endl;
-	cin >> tmp;
-	arr[index] = tmp;
+	tmp.In();
+	arr[id] = tmp;
 }

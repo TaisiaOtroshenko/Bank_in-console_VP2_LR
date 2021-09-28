@@ -1,4 +1,11 @@
-//лябудутестером
+/*
+перегрузка - > для классов данных
+шаблоны - функции принимающие векторы
+ошибки  - ввод сущ. пользователя
+		- ввод строки в меню 
+		- 
+*/
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -8,7 +15,7 @@
 #include "Client.h"
 #include "Employee.h"
 #include "Account.h"
-//#include "Func.h"
+#include "Func.h"
 
 using namespace std;
 using namespace otv;
@@ -31,9 +38,10 @@ vector <Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
 vector <Account> ACCOUNT{};
 User* CUR_USER{};
+int cur_list = -1;
 #pragma endregion
 
-#pragma region Список функций (.h)
+#pragma region Список функций (заголовок)
 
 //Работает на достаточном уровне
 int AddClient(/*Работает с ошибкой - присвоение id при перезапуске программы все еще начинается с начального значения
@@ -67,10 +75,11 @@ int ListOut();
 //Работает на достаточном уровне
 void Screen_0();
 void Screen_1();
+
 void Screen_2();
 void Screen_3();
 
-void Begin(/*вылетает*/);
+//Работает на достаточном уровне
 void Save();
 #pragma endregion
 
@@ -78,7 +87,47 @@ int main()
 {
 	setlocale(0, "");
 
-	Begin();
+	ifstream fin_bin;
+	int tmp_size{};
+#pragma region Загрузка файла клиентов
+
+	fin_bin.open(CLI, ios_base::in | ios::binary);
+	fin_bin.read((char*)&tmp_size, sizeof(int));
+	Client tmp_client{};
+
+	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
+	{
+		fin_bin.read((char*)&tmp_client, sizeof(Client));
+		CLIENT.push_back(tmp_client);
+	}
+	fin_bin.close();
+#pragma endregion
+#pragma region Загрузка файла сотрудников
+
+	fin_bin.open(EMP, ios_base::in | ios::binary);
+	fin_bin.read((char*)&tmp_size, sizeof(int));
+	Employee tmp_employee{};
+
+	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
+	{
+		fin_bin.read((char*)&tmp_employee, sizeof(Employee));
+		EMPLOYEE.push_back(tmp_employee);
+	}
+	fin_bin.close();
+#pragma endregion
+#pragma region Загрузка файла карт
+
+	fin_bin.open(ACC, ios_base::in | ios::binary);
+	fin_bin.read((char*)&tmp_size, sizeof(int));
+	Account tmp_account{};
+
+	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
+	{
+		fin_bin.read((char*)&tmp_account, sizeof(Account));
+		ACCOUNT.push_back(tmp_account);
+	}
+	fin_bin.close();
+#pragma endregion	
 
 	while (CUR_USER == nullptr)
 	{
@@ -152,7 +201,7 @@ int main()
 		}
 		if (CUR_USER == nullptr)
 		{
-			cout << "Неверно введены данные" << endl;
+			cout << "Вход не разрешен. Проверьте правильность введенных данных и повторите попытку." << endl;
 		}
 		return 0;
 	}
@@ -162,7 +211,7 @@ void Screen_0()
 #pragma region заполнение массива пунктов меню авторизации
 
 	FIN_TXT.open(MENU_AUTH);
-
+	
 	size_t item_count_1{};
 	FIN_TXT >> item_count_1;
 	FIN_TXT.ignore();
@@ -174,7 +223,7 @@ void Screen_0()
 		items_1[i].SetItemName(buff);
 	}
 	FIN_TXT.close();
-
+	
 
 	items_1[0].SetFunc(AddClient);
 	items_1[1].SetFunc(AddEmployee);
@@ -196,6 +245,7 @@ void Screen_0()
 #pragma region функции меню клиента
 int EditUser()
 {
+	//((Client*)CUR_USER)->Print(); - ошибка - нарушение прав доступа при чтении по адресу
 	CUR_USER->PrintParent();
 	cout << "\tВведите новые данные" << endl;
 	CUR_USER->In();
@@ -239,7 +289,6 @@ int DelAcc()
 			ACCOUNT.erase(ACCOUNT.begin() + i);
 			cout << "Ваша карта успешно удалена" << endl;
 			system("pause");
-			VerifyOut();
 			break;
 		}
 	}
@@ -311,10 +360,14 @@ void Screen_1()
 #pragma region функции меню сотрудника
 int ListAcc()
 {
+	cur_list = 0;
+	Screen_3();
 	return 0;
 }
 int ListCli()
 {
+	cur_list = 1;
+	Screen_3();
 	return 0;
 }
 int DelEmp()
@@ -322,7 +375,7 @@ int DelEmp()
 	size_t id{};
 	for (int i = 0; i < CLIENT.size(); i++)
 	{
-		if (CUR_USER->GetId() == CLIENT[i].GetId())// на случай если наебнется
+		if (CUR_USER->GetId() == CLIENT[i].GetId())
 		{
 		id = CUR_USER->GetId();
 		CLIENT.erase(CLIENT.begin() + id);
@@ -333,6 +386,7 @@ int DelEmp()
 	}
 	return 0;
 }
+//int VerifyOut используется для сотрудника и клиента
 #pragma endregion
 void Screen_2()
 {
@@ -368,22 +422,34 @@ CMenu menu_emp = CMenu("Меню сотрудника", item, item_count, Save);
 
 
 #pragma region функции меню работы со списками
-int AddIt() {
+int AddIt() 
+{
+	(cur_list) ? (Add<Client>(CLIENT)) : (Add<Account>(ACCOUNT));
 	return 0;
 };
-int DelIt() {
+int DelIt() 
+{
+	(cur_list) ? (Del<Client>(CLIENT)) : (Del<Account>(ACCOUNT));
 	return 0;
 };
-int EditIt() {
+int EditIt() 
+{
+	(cur_list) ? (Edit<Client>(CLIENT)) : (Edit<Account>(ACCOUNT));
 	return 0;
 };
-int SortIt() {
+int SortIt() 
+{
+	(cur_list) ? (Sort<Client>(CLIENT)) : (Sort<Account>(ACCOUNT));
 	return 0;
 };
-int FilterIt() {
+int FilterIt() 
+{
+	(cur_list) ? (Filter<Client>(CLIENT)) : (Filter<Account>(ACCOUNT));
 	return 0;
 };
-int ListOut() {
+int ListOut() 
+{
+	cur_list = -1;
 	return 0;
 }
 #pragma endregion
@@ -412,7 +478,7 @@ void Screen_3()
 #pragma endregion
 #pragma region вызов меню списков
 	CMenu menu_list = CMenu("Меню списка", item, item_count, Save);
-	while (CUR_USER != nullptr) //нужно условие перехода на предыдущий экран
+	while (cur_list != -1)
 	{
 		cout << menu_list;
 		cin >> menu_list;
@@ -420,58 +486,11 @@ void Screen_3()
 #pragma endregion
 }
 
-
-void Begin()
-{
-	/*
-	ifstream fin_bin;
-	int tmp_size{};
-#pragma region Загрузка файла клиентов
-
-	fin_bin.open(CLI, ios_base::in | ios::binary);
-	fin_bin.read((char*)&tmp_size, sizeof(int));
-	Client tmp_client{};
-
-	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
-	{
-		fin_bin.read((char*)&tmp_client, sizeof(Client));
-		CLIENT.push_back(tmp_client);
-	}
-	fin_bin.close();
-#pragma endregion
-#pragma region Загрузка файла сотрудников
-
-	fin_bin.open(EMP, ios_base::in | ios::binary);
-	fin_bin.read((char*)&tmp_size, sizeof(int));
-	Employee tmp_employee{};
-
-	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
-	{
-		fin_bin.read((char*)&tmp_employee, sizeof(Employee));
-		EMPLOYEE.push_back(tmp_employee);
-	}
-	fin_bin.close();
-#pragma endregion
-#pragma region Загрузка файла карт
-
-	fin_bin.open(ACC, ios_base::in | ios::binary);
-	fin_bin.read((char*)&tmp_size, sizeof(int));
-	Account tmp_account{};
-
-	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
-	{
-		fin_bin.read((char*)&tmp_account, sizeof(Account));
-		ACCOUNT.push_back(tmp_account);
-	}
-	fin_bin.close();
-#pragma endregion
-	*/
-}//вылетает при завершении функции
-
 void Save()
 {
+	//выгружает размеры и данные верторов в файлы
 	ofstream fout_bin{};
-	int tmp_size{};
+	size_t tmp_size{};
 #pragma region Выгрузка клиентов в файл
 
 	fout_bin.open(CLI, ios::binary | ios::out);

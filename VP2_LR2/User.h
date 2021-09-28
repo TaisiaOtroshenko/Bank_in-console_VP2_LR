@@ -22,7 +22,8 @@ public:
 	size_t GetId();
 
 	void In();
-	string OutLvl();
 	virtual void PrintParent() const;
 	friend ostream& operator<<(ostream& out, const User& man);
+
+	friend bool operator>(const User& a, const User& b);
 };

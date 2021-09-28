@@ -1,11 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "User.h"
-using namespace std;
-
-//перегрузить операторы сравнения на int и char и присвоения 
-
-
-
 
 User::User()
 {
@@ -43,25 +37,23 @@ void User::In()
 }
 
 
-
-
-#pragma region  вывод
-string User::OutLvl()
-{
-	return (m_lvl) ? ("Сотрудник") : ("Клиент");
-}
 void User::PrintParent() const
 {
 	cout << "\t\t" << "Текущие данные пользователя" << endl;
-	//cout << OutLvl();
-	cout << "ID пользователя - " << m_id << endl;
-	cout << "Имя пользователя - " << m_name << endl;
-	cout << "Логин пользователя - " << m_login << endl;
+
+	cout << "Роль пользователя - " ;
+	(m_lvl) ? (cout << "Сотрудник" << endl) : (cout << "Клиент" << endl);
+
+	cout << "ID - " << m_id << endl;
+	cout << "Логин - " << m_login << endl;
 }
 ostream& operator<<(ostream& out, const User& man)
 {
 	man.PrintParent();
 	return out;
 }
-#pragma endregion
 
+bool operator>(const User& a, const User& b)
+{
+	return (a.m_id > b.m_id) ? (true) : (false);
+}

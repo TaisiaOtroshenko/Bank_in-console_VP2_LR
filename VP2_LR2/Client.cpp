@@ -3,20 +3,26 @@
 
 Client::Client()
 {
-	//m_id = ID_user++;
-	//time_t now = time(0);
-	//m_date = ctime(&now);
 	m_lvl = false;
 }
-
+void Client::In()
+{
+	cout << "Введите логин: ";
+	cin >> m_login;
+	cout << "Введите пароль: ";
+	cin >> m_pass;
+	cout << "Введите имя: ";
+	cin >> m_name;
+}
 void Client::Print() const
 {
-	cout << "\t\t" << "Текущие данные пользователя" << endl;
-	cout << "Тип пользователя - Клиент" << endl;
-	cout << "ID пользователя - " << m_id << endl;
-	cout << "Имя польззователя - " << m_name << endl;
-}
+	PrintParent();
 
+	cout << "Имя - " << m_name << endl;
+	cout << "Пароль - " << m_pass << endl;
+
+	cout << "Дата создания -  " << m_date << endl;
+}
 
 Client Client::operator=(Client a)
 {
@@ -26,17 +32,7 @@ Client Client::operator=(Client a)
 	m_name = a.m_name;
 	m_login = a.m_login;
 	m_pass = a.m_pass;
-	//m_cards = a.m_cards;
 	return *this;
-}
-void Client::In() // &&& узнать, как заставить эту функцию вызывать .In класса-родителя User
-{
-	cout << "Введите логин: ";
-	cin >> m_login;
-	cout << "Введите пароль: ";
-	cin >> m_pass;
-	cout << "Введите имя: ";
-	cin >> m_name;
 }
 bool operator> (const Client& a, const Client& b)
 {
