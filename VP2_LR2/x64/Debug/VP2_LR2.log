@@ -1,14 +1,6 @@
-﻿  Func.cpp
+﻿  Client.cpp
+  Employee.cpp
   main.cpp
+  User.cpp
   Создание кода...
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Add<class Client>(class std::vector<class Client,class std::allocator<class Client> >)" (??$Add@VClient@@@@YAXV?$vector@VClient@@V?$allocator@VClient@@@std@@@std@@@Z) в функции "int __cdecl AddIt(void)" (?AddIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Add<class Account>(class std::vector<class Account,class std::allocator<class Account> >)" (??$Add@VAccount@@@@YAXV?$vector@VAccount@@V?$allocator@VAccount@@@std@@@std@@@Z) в функции "int __cdecl AddIt(void)" (?AddIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Del<class Client>(class std::vector<class Client,class std::allocator<class Client> >)" (??$Del@VClient@@@@YAXV?$vector@VClient@@V?$allocator@VClient@@@std@@@std@@@Z) в функции "int __cdecl DelIt(void)" (?DelIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Del<class Account>(class std::vector<class Account,class std::allocator<class Account> >)" (??$Del@VAccount@@@@YAXV?$vector@VAccount@@V?$allocator@VAccount@@@std@@@std@@@Z) в функции "int __cdecl DelIt(void)" (?DelIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Edit<class Client>(class std::vector<class Client,class std::allocator<class Client> >)" (??$Edit@VClient@@@@YAXV?$vector@VClient@@V?$allocator@VClient@@@std@@@std@@@Z) в функции "int __cdecl EditIt(void)" (?EditIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Edit<class Account>(class std::vector<class Account,class std::allocator<class Account> >)" (??$Edit@VAccount@@@@YAXV?$vector@VAccount@@V?$allocator@VAccount@@@std@@@std@@@Z) в функции "int __cdecl EditIt(void)" (?EditIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Sort<class Client>(class std::vector<class Client,class std::allocator<class Client> >)" (??$Sort@VClient@@@@YAXV?$vector@VClient@@V?$allocator@VClient@@@std@@@std@@@Z) в функции "int __cdecl SortIt(void)" (?SortIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Sort<class Account>(class std::vector<class Account,class std::allocator<class Account> >)" (??$Sort@VAccount@@@@YAXV?$vector@VAccount@@V?$allocator@VAccount@@@std@@@std@@@Z) в функции "int __cdecl SortIt(void)" (?SortIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Filter<class Client>(class std::vector<class Client,class std::allocator<class Client> >)" (??$Filter@VClient@@@@YAXV?$vector@VClient@@V?$allocator@VClient@@@std@@@std@@@Z) в функции "int __cdecl FilterIt(void)" (?FilterIt@@YAHXZ).
-main.obj : error LNK2019: ссылка на неразрешенный внешний символ "void __cdecl Filter<class Account>(class std::vector<class Account,class std::allocator<class Account> >)" (??$Filter@VAccount@@@@YAXV?$vector@VAccount@@V?$allocator@VAccount@@@std@@@std@@@Z) в функции "int __cdecl FilterIt(void)" (?FilterIt@@YAHXZ).
-C:\Users\tytsy\Desktop\VP2_LR\x64\Debug\VP2_LR2.exe : fatal error LNK1120: неразрешенных внешних элементов: 10
+  VP2_LR2.vcxproj -> C:\Users\tytsy\Desktop\VP2_LR\x64\Debug\VP2_LR2.exe

@@ -1,9 +1,5 @@
 /*
-перегрузка - > для классов данных
 шаблоны - функции принимающие векторы
-ошибки  - ввод сущ. пользователя
-		- ввод строки в меню 
-		- 
 */
 
 #include <iostream>
@@ -16,43 +12,23 @@
 #include "Employee.h"
 #include "Account.h"
 #include "Func.h"
+#include "Constants.h"
 
 using namespace std;
 using namespace otv;
 
-#pragma region Константы
-
-typedef int(*func)();
-
-string CLI = "client.bin", EMP = "employee.bin", ACC = "account.bin",
-
-MENU_AUTH = "menu_auth.txt",
-MENU_CLI = "menu_client.txt",
-MENU_EMP = "menu_employee.txt",
-MENU_LIST = "menu_list.txt";
-ifstream FIN_TXT;
-
-char* buff = new char[1024]{};
-
 vector <Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
 vector <Account> ACCOUNT{};
-User* CUR_USER{};
-int cur_list = -1;
-#pragma endregion
 
-#pragma region Список функций (заголовок)
+#pragma region Заголовок
 
-//Работает на достаточном уровне
-int AddClient(/*Работает с ошибкой - присвоение id при перезапуске программы все еще начинается с начального значения
-									- возможно создание пользователя с тем же именем*/);
+int AddClient();
 int AddEmployee();
 int Verify();
 
-//Работает на достаточном уровне
 int EditUser();
 
-//Работает на достаточном уровне
 int OutputAcc(/*Работает с ошибкой - время*/);
 int AddAcc(); 
 int DelAcc();
@@ -62,24 +38,22 @@ int ListAcc();
 int ListCli();
 int DelEmp();
 
-//Работает на достаточном уровне
 int VerifyOut();
 
+//Не работает передача векторов в функции-шаблоны. Ошибка сборки.
 int AddIt();
 int DelIt();
 int EditIt();
 int SortIt();
 int FilterIt();
+
 int ListOut();
 
-//Работает на достаточном уровне
 void Screen_0();
 void Screen_1();
-
 void Screen_2();
 void Screen_3();
 
-//Работает на достаточном уровне
 void Save();
 #pragma endregion
 
@@ -90,40 +64,71 @@ int main()
 	ifstream fin_bin;
 	int tmp_size{};
 #pragma region Загрузка файла клиентов
-
-	fin_bin.open(CLI, ios_base::in | ios::binary);
+	try
+	{
+		fin_bin.open(CLI, ios_base::in | ios::binary);
+	}
+	catch (...)
+	{
+		cout << "Не удалось открыть файл" << endl;
+	}
 	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Client tmp_client{};
 
 	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
 	{
 		fin_bin.read((char*)&tmp_client, sizeof(Client));
+		if (tmp_client.GetId() > id_us)
+		{
+			id_us = tmp_client.GetId();
+		}
 		CLIENT.push_back(tmp_client);
 	}
 	fin_bin.close();
 #pragma endregion
 #pragma region Загрузка файла сотрудников
-
-	fin_bin.open(EMP, ios_base::in | ios::binary);
+	try
+	{
+		fin_bin.open(EMP, ios_base::in | ios::binary);
+	}
+	catch (...)
+	{
+		cout << "Не удалось открыть файл" << endl;
+	}
 	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Employee tmp_employee{};
 
 	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
 	{
 		fin_bin.read((char*)&tmp_employee, sizeof(Employee));
+		if (tmp_employee.GetId() > id_us)
+		{
+			id_us = tmp_employee.GetId();
+		}
 		EMPLOYEE.push_back(tmp_employee);
 	}
 	fin_bin.close();
 #pragma endregion
 #pragma region Загрузка файла карт
-
-	fin_bin.open(ACC, ios_base::in | ios::binary);
+	try
+	{
+		fin_bin.open(ACC, ios_base::in | ios::binary);
+	}
+	catch (...)
+	{
+		cout << "Не удалось открыть файл" << endl;
+	}
+	
 	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Account tmp_account{};
 
 	for (int i = 0; i < tmp_size && !fin_bin.eof(); i++)
 	{
 		fin_bin.read((char*)&tmp_account, sizeof(Account));
+		if (tmp_account.GetId() > id_acc)
+		{
+			id_acc = tmp_account.GetId();
+		}
 		ACCOUNT.push_back(tmp_account);
 	}
 	fin_bin.close();
@@ -153,7 +158,30 @@ int main()
 	{
 		Client tmp_cli{};
 		tmp_cli.In();
+		try
+		{
+			for (int i = 0; i < CLIENT.size(); ++i)
+			{
+				if (CLIENT[i].GetLogin() == tmp_cli.GetLogin())
+				{
+					throw - 1;
+				}
+			}
+			for (int i = 0; i < EMPLOYEE.size(); ++i)
+			{
+				if (EMPLOYEE[i].GetLogin() == tmp_cli.GetLogin())
+				{
+					throw - 1;
+				}
+			}
+		}
+		catch (int)
+		{
+			cout << "Пользователь с таким логином уже существует. Пожалуйста, попробуйте еще раз с другим логином." << endl;
+			return 0;
+		}
 		CLIENT.push_back(tmp_cli);
+		cout << "Пользователь создан." << endl;
 		return 0;
 	}
 	int AddEmployee()
@@ -161,7 +189,30 @@ int main()
 	{
 		Employee tmp_emp{};
 		tmp_emp.In();
+		try
+		{
+			for (int i = 0; i < CLIENT.size(); ++i)
+			{
+				if (CLIENT[i].GetLogin() == tmp_emp.GetLogin())
+				{
+					throw - 1;
+				}
+			}
+			for (int i = 0; i < EMPLOYEE.size(); ++i)
+			{
+				if (EMPLOYEE[i].GetLogin() == tmp_emp.GetLogin())
+				{
+					throw - 1;
+				}
+			}
+		}
+		catch (int)
+		{
+			cout << "Пользователь с таким логином уже существует. Пожалуйста, попробуйте еще раз с другим логином." << endl;
+			return 0;
+		}
 		EMPLOYEE.push_back(tmp_emp);
+		cout << "Пользователь создан." << endl;
 		return 0;
 	}
 	int Verify()
@@ -208,6 +259,7 @@ int main()
 #pragma endregion
 void Screen_0()
 {
+	system("cls");
 #pragma region заполнение массива пунктов меню авторизации
 
 	FIN_TXT.open(MENU_AUTH);
@@ -223,7 +275,6 @@ void Screen_0()
 		items_1[i].SetItemName(buff);
 	}
 	FIN_TXT.close();
-	
 
 	items_1[0].SetFunc(AddClient);
 	items_1[1].SetFunc(AddEmployee);
@@ -241,13 +292,11 @@ void Screen_0()
 #pragma endregion
 }
 
-
 #pragma region функции меню клиента
 int EditUser()
 {
 	//((Client*)CUR_USER)->Print(); - ошибка - нарушение прав доступа при чтении по адресу
 	CUR_USER->PrintParent();
-	cout << "\tВведите новые данные" << endl;
 	CUR_USER->In();
 	cout << "Данные успешно изменены" << endl;
 	return 0;
@@ -360,13 +409,13 @@ void Screen_1()
 #pragma region функции меню сотрудника
 int ListAcc()
 {
-	cur_list = 0;
+	cur_list = 1;
 	Screen_3();
 	return 0;
 }
 int ListCli()
 {
-	cur_list = 1;
+	cur_list = 0;
 	Screen_3();
 	return 0;
 }
@@ -386,20 +435,22 @@ int DelEmp()
 	}
 	return 0;
 }
-//int VerifyOut используется для сотрудника и клиента
+//int VerifyOut и EditUser используется для сотрудника и клиента
 #pragma endregion
 void Screen_2()
 {
 #pragma region заполнение массива пунктов меню сотрудника
-	ifstream FIN_TXT;
+	
 	FIN_TXT.open(MENU_EMP);
+
 	size_t item_count{};
 	FIN_TXT >> item_count;
+	FIN_TXT.ignore();
 
 	ItemMenu* item = new ItemMenu[item_count]{};
 	for (int i = 0; i < item_count && FIN_TXT.is_open(); i++)
 	{
-		FIN_TXT >> buff;
+		FIN_TXT.getline(buff, 1023);
 		item[i].SetItemName(buff);
 	}
 	FIN_TXT.close();
@@ -424,47 +475,58 @@ CMenu menu_emp = CMenu("Меню сотрудника", item, item_count, Save);
 #pragma region функции меню работы со списками
 int AddIt() 
 {
-	(cur_list) ? (Add<Client>(CLIENT)) : (Add<Account>(ACCOUNT));
+	if (cur_list)
+	{
+		//Add<Client>(CLIENT);
+	}
+	else
+	{
+		//Add<Account>(ACCOUNT);
+	}
 	return 0;
 };
 int DelIt() 
 {
-	(cur_list) ? (Del<Client>(CLIENT)) : (Del<Account>(ACCOUNT));
+	//(cur_list) ? (Del<Client>(CLIENT)) : (Del<Account>(ACCOUNT));
 	return 0;
 };
 int EditIt() 
 {
-	(cur_list) ? (Edit<Client>(CLIENT)) : (Edit<Account>(ACCOUNT));
+	//(cur_list) ? (Edit<Client>(CLIENT)) : (Edit<Account>(ACCOUNT));
 	return 0;
 };
 int SortIt() 
 {
-	(cur_list) ? (Sort<Client>(CLIENT)) : (Sort<Account>(ACCOUNT));
+	//(cur_list) ? (Sort<Client>(CLIENT)) : (Sort<Account>(ACCOUNT));
 	return 0;
 };
 int FilterIt() 
 {
-	(cur_list) ? (Filter<Client>(CLIENT)) : (Filter<Account>(ACCOUNT));
+	//(cur_list) ? (Filter<Client>(CLIENT)) : (Filter<Account>(ACCOUNT));
 	return 0;
 };
 int ListOut() 
 {
 	cur_list = -1;
+	system("cls");
 	return 0;
 }
 #pragma endregion
 void Screen_3()
 {
+	system("cls");
 #pragma region заполнение массива пунктов меню списков
-	ifstream FIN_TXT;
+	
 	FIN_TXT.open(MENU_LIST);
+
 	size_t item_count{};
 	FIN_TXT >> item_count;
+	FIN_TXT.ignore();
 
 	ItemMenu* item = new ItemMenu[item_count]{};
 	for (int i = 0; i < item_count && FIN_TXT.is_open(); i++)
 	{
-		FIN_TXT >> buff;
+		FIN_TXT.getline(buff, 1023);
 		item[i].SetItemName(buff);
 	}
 	FIN_TXT.close();
@@ -474,10 +536,11 @@ void Screen_3()
 	item[2].SetFunc(EditIt);
 	item[3].SetFunc(SortIt);
 	item[4].SetFunc(FilterIt);
-	item[5].SetFunc(VerifyOut);
+	item[5].SetFunc(ListOut);
 #pragma endregion
 #pragma region вызов меню списков
-	CMenu menu_list = CMenu("Меню списка", item, item_count, Save);
+	string title = (cur_list) ? ("Меню списка клиентов") : ("Меню списка карт");
+	CMenu menu_list = CMenu(title, item, item_count, Save);
 	while (cur_list != -1)
 	{
 		cout << menu_list;

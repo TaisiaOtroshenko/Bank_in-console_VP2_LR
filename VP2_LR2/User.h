@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 using namespace std;
+
 
 static size_t ID_user = 1000;
 class User {

@@ -25,10 +25,6 @@ namespace otv
     {
         return m_title;
     }
-    bool CMenu::IsRun() const
-    {
-        return m_running;
-    }
     ItemMenu* CMenu::GetItems() const
     {
         return m_items;
@@ -48,12 +44,17 @@ namespace otv
     void CMenu::RunCommand()
     {
         cout << "\n\tSelect >> ";
+
         try
         {
-            cin >> m_select; //почему все буквы записываются 0??
+            char tmp{};
+            cin.get(tmp); //почему все буквы записываются 0??
+            cin.ignore(1024, '\n');
+
+            m_select = tmp - 48;
             if (m_select <0 || m_select > m_count)
             {
-                throw -1;
+                throw - 1;
             }
         }
         catch (int)
@@ -63,7 +64,7 @@ namespace otv
         }
         catch (...)
         {
-            cerr << "Неверный ввод. Попробуйте еще раз." << endl;
+            cerr << "Ошибка ввода. Попробуйте еще раз." << endl;
             RunCommand();
         }
         if (m_select == 0)
@@ -71,6 +72,7 @@ namespace otv
             m_func_save();
             exit(0);
         }
+        cout << endl;
         m_items[m_select - 1].Run();
     }
 

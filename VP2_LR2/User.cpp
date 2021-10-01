@@ -30,6 +30,7 @@ size_t User::GetId()
 
 void User::In()
 {
+	cout << "\tВвод данных пользователя" << endl;
 	cout << "Введите логин:	";
 	cin >> m_login;
 	cout << "Введите пароль: ";
@@ -39,7 +40,7 @@ void User::In()
 
 void User::PrintParent() const
 {
-	cout << "\t\t" << "Текущие данные пользователя" << endl;
+	cout << "\tТекущие данные пользователя" << endl;
 
 	cout << "Роль пользователя - " ;
 	(m_lvl) ? (cout << "Сотрудник" << endl) : (cout << "Клиент" << endl);
