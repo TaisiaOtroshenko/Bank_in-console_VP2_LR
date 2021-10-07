@@ -1,15 +1,13 @@
 #pragma once
 #include <iostream>
+#include "Constants.h"
 using namespace std;
-
-static size_t ID_account = 12301230;
 
 class Account
 {
 	size_t m_id_owner{};
 	size_t m_id{};
 	string m_name{};
-	char* m_date;
 	unsigned long m_balance{};
 public:
 	Account();
@@ -17,7 +15,6 @@ public:
 
 	size_t GetId();
 	size_t GetIdOwner();
-	//void Trans(Account scd, int summ_tr);
 
 	void In();
 	void Print() const;

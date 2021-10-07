@@ -44,14 +44,9 @@ namespace otv
     void CMenu::RunCommand()
     {
         cout << "\n\tSelect >> ";
-
         try
         {
-            char tmp{};
-            cin.get(tmp); //почему все буквы записываются 0??
-            cin.ignore(1024, '\n');
-
-            m_select = tmp - 48;
+            cin >> m_select;
             if (m_select <0 || m_select > m_count)
             {
                 throw - 1;

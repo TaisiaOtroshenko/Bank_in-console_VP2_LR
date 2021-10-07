@@ -17,18 +17,14 @@ void Client::In()
 void Client::Print() const
 {
 	PrintParent();
-
 	cout << "Имя - " << m_name << endl;
 	cout << "Пароль - " << m_pass << endl;
-
-	cout << "Дата создания -  " << m_date << endl;
 }
 
 Client Client::operator=(Client a)
 {
 	m_id = a.m_id;
 	m_lvl = a.m_lvl;
-	m_date = a.m_date;
 	m_name = a.m_name;
 	m_login = a.m_login;
 	m_pass = a.m_pass;
@@ -36,11 +32,9 @@ Client Client::operator=(Client a)
 }
 bool operator> (const Client& a, const Client& b)
 {
-	return a.m_name > b.m_name;
+	return 0<=a.m_name.compare(b.m_name);
 }
 bool operator== (const Client& a, const Client& b)
 {
-	bool r{};
-	r = (a.m_login == b.m_login && a.m_pass == b.m_pass);
-	return r;
+	return (a.m_login == b.m_login && a.m_pass == b.m_pass);
 }

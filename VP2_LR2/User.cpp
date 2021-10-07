@@ -3,9 +3,7 @@
 
 User::User()
 {
-	m_id = ID_user++;
-	time_t now = time(0);
-	m_date = ctime(&now);
+	m_id = id_us++;
 }
 
 string User::GetLogin()
@@ -36,7 +34,6 @@ void User::In()
 	cout << "¬ведите пароль: ";
 	cin >> m_pass;
 }
-
 
 void User::PrintParent() const
 {

@@ -1,9 +1,4 @@
-/*
-шаблоны - функции принимающие векторы
-*/
-
 #include <iostream>
-#include <iomanip>
 #include <fstream>
 #include <vector>
 
@@ -12,14 +7,30 @@
 #include "Employee.h"
 #include "Account.h"
 #include "Func.h"
-#include "Constants.h"
 
 using namespace std;
 using namespace otv;
 
+extern size_t id_us;
+extern size_t id_acc;
+
+typedef int(*func)();
+
+string CLI = "client.bin", EMP = "employee.bin", ACC = "account.bin",
+
+MENU_AUTH = "menu_auth.txt",
+MENU_CLI = "menu_client.txt",
+MENU_EMP = "menu_employee.txt",
+MENU_LIST = "menu_list.txt";
+ifstream FIN_TXT;
+
+char* buff = new char[1024]{};
+
 vector <Client> CLIENT{};
 vector <Employee> EMPLOYEE{};
 vector <Account> ACCOUNT{};
+User* CUR_USER{};
+bool cur_list{ false };
 
 #pragma region Заголовок
 
@@ -29,18 +40,17 @@ int Verify();
 
 int EditUser();
 
-int OutputAcc(/*Работает с ошибкой - время*/);
+int OutputAcc();
 int AddAcc(); 
 int DelAcc();
 int DelCli();
 
-int ListAcc();
 int ListCli();
 int DelEmp();
 
 int VerifyOut();
 
-//Не работает передача векторов в функции-шаблоны. Ошибка сборки.
+int OutIt();
 int AddIt();
 int DelIt();
 int EditIt();
@@ -118,7 +128,7 @@ int main()
 	{
 		cout << "Не удалось открыть файл" << endl;
 	}
-	
+
 	fin_bin.read((char*)&tmp_size, sizeof(int));
 	Account tmp_account{};
 
@@ -150,7 +160,6 @@ int main()
 	system("pause");
 	return 0;
 }
-
 
 #pragma region функции меню авторизации
 	int AddClient()
@@ -292,10 +301,10 @@ void Screen_0()
 #pragma endregion
 }
 
+
 #pragma region функции меню клиента
 int EditUser()
 {
-	//((Client*)CUR_USER)->Print(); - ошибка - нарушение прав доступа при чтении по адресу
 	CUR_USER->PrintParent();
 	CUR_USER->In();
 	cout << "Данные успешно изменены" << endl;
@@ -407,15 +416,9 @@ void Screen_1()
 
 
 #pragma region функции меню сотрудника
-int ListAcc()
-{
-	cur_list = 1;
-	Screen_3();
-	return 0;
-}
 int ListCli()
 {
-	cur_list = 0;
+	cur_list = true;
 	Screen_3();
 	return 0;
 }
@@ -456,10 +459,9 @@ void Screen_2()
 	FIN_TXT.close();
 
 	item[0].SetFunc(EditUser);
-	item[1].SetFunc(ListAcc);
-	item[2].SetFunc(ListCli);
-	item[3].SetFunc(DelEmp);
-	item[4].SetFunc(VerifyOut);
+	item[1].SetFunc(ListCli);
+	item[2].SetFunc(DelEmp);
+	item[3].SetFunc(VerifyOut);
 #pragma endregion
 #pragma region вызов меню сотрудника
 CMenu menu_emp = CMenu("Меню сотрудника", item, item_count, Save);
@@ -473,41 +475,109 @@ CMenu menu_emp = CMenu("Меню сотрудника", item, item_count, Save);
 
 
 #pragma region функции меню работы со списками
+int OutIt()
+{
+	cout << "\tСписок клиентов" << endl;
+	for (int i = 0; i < CLIENT.size(); ++i)
+	{
+		CLIENT[i].Print();
+	}
+	return 0;
+}
 int AddIt() 
 {
-	if (cur_list)
+	Client tmp{};
+	tmp.In();
+	try
 	{
-		//Add<Client>(CLIENT);
+		for (int i = 0; i < CLIENT.size(); ++i)
+		{
+			if (CLIENT[i].GetLogin() == tmp.GetLogin())
+			{
+				throw - 1;
+			}
+		}
+		for (int i = 0; i < EMPLOYEE.size(); ++i)
+		{
+			if (EMPLOYEE[i].GetLogin() == tmp.GetLogin())
+			{
+				throw - 1;
+			}
+		}
 	}
-	else
+	catch (int)
 	{
-		//Add<Account>(ACCOUNT);
+		cout << "Пользователь с таким логином уже существует. Пожалуйста, попробуйте еще раз с другим логином." << endl;
+		return 0;
 	}
+	CLIENT.push_back(tmp);
+	cout << "Пользователь создан." << endl;
 	return 0;
 };
 int DelIt() 
 {
-	//(cur_list) ? (Del<Client>(CLIENT)) : (Del<Account>(ACCOUNT));
+	size_t id{};
+	cout << "\nВведите id элемента, который хотите удалить:" << endl;
+	cin >> id;
+
+	for (int i = 0; i < CLIENT.size(); ++i)
+	{
+		if (id == CLIENT[i].GetId())
+		{
+			CLIENT.erase(CLIENT.begin() + i);
+			cout << "Элемент успешно удален" << endl;
+			break;
+		}
+	}
 	return 0;
 };
 int EditIt() 
 {
-	//(cur_list) ? (Edit<Client>(CLIENT)) : (Edit<Account>(ACCOUNT));
+	size_t id{};
+	cout << "\nВведите id элемента, который хотите  редактировать:" << endl;
+	cin >> id;
+
+	Client tmp{};
+	CLIENT[id].Print();
+	cout << "Ведите новые данные" << endl;
+	tmp.In();
+	CLIENT[id] = tmp;
 	return 0;
 };
 int SortIt() 
 {
-	//(cur_list) ? (Sort<Client>(CLIENT)) : (Sort<Account>(ACCOUNT));
+	for (size_t i = 0; i < CLIENT.size(); ++i)
+	{
+		for (size_t j = 0; j < CLIENT.size(); ++j)
+		{
+			if (CLIENT[j] > CLIENT[i])
+			{
+				Client tmp = CLIENT[i];
+				CLIENT[i] = CLIENT[j];
+				CLIENT[j] = tmp;
+			}
+		}
+	}
+	cout << "Элементы отсортированы" << endl;
 	return 0;
 };
 int FilterIt() 
 {
-	//(cur_list) ? (Filter<Client>(CLIENT)) : (Filter<Account>(ACCOUNT));
+	size_t par{};
+	cout << "\nВведите значение параметра (id) для фильтрации:" << endl;
+	cin >> par;
+
+	for (size_t i = 0; i < CLIENT.size(); ++i)
+	{
+		if (CLIENT[i].GetId() == par)
+			CLIENT[i].Print();
+	}
+	cout << "Элементы отфильтрованы" << endl;
 	return 0;
 };
 int ListOut() 
 {
-	cur_list = -1;
+	cur_list = false;
 	system("cls");
 	return 0;
 }
@@ -531,17 +601,18 @@ void Screen_3()
 	}
 	FIN_TXT.close();
 
-	item[0].SetFunc(AddIt);
-	item[1].SetFunc(DelIt);
-	item[2].SetFunc(EditIt);
-	item[3].SetFunc(SortIt);
-	item[4].SetFunc(FilterIt);
-	item[5].SetFunc(ListOut);
+	item[0].SetFunc(OutIt);
+	item[1].SetFunc(AddIt);
+	item[2].SetFunc(DelIt);
+	item[3].SetFunc(EditIt);
+	item[4].SetFunc(SortIt);
+	item[5].SetFunc(FilterIt);
+	item[6].SetFunc(ListOut);
 #pragma endregion
 #pragma region вызов меню списков
-	string title = (cur_list) ? ("Меню списка клиентов") : ("Меню списка карт");
+	string title = "Меню списка клиентов";
 	CMenu menu_list = CMenu(title, item, item_count, Save);
-	while (cur_list != -1)
+	while (cur_list)
 	{
 		cout << menu_list;
 		cin >> menu_list;
@@ -551,7 +622,7 @@ void Screen_3()
 
 void Save()
 {
-	//выгружает размеры и данные верторов в файлы
+	//выгружает длину и данные верторов в файлы
 	ofstream fout_bin{};
 	size_t tmp_size{};
 #pragma region Выгрузка клиентов в файл

@@ -17,11 +17,9 @@ void Employee::In()
 void Employee::Print() const
 {
 	PrintParent();
-
 	cout << "Имя - " << m_name << endl;
 	cout << "Пароль - " << m_pass << endl;
-
-	cout << "Дата создания -  " << m_date << endl;
+	cout << "Зарплата - " << m_salary << endl;
 }
 
 Employee Employee:: operator=(Employee a)
@@ -29,7 +27,6 @@ Employee Employee:: operator=(Employee a)
 	m_id = a.m_id;
 	m_login = a.m_login;
 	m_pass = a.m_pass;
-	m_date = a.m_date;
 	m_name = a.m_name;
 	m_lvl = a.m_lvl;
 	m_salary = a.m_salary;
@@ -37,7 +34,7 @@ Employee Employee:: operator=(Employee a)
 }
 bool operator> (const Employee& a, const Employee& b)
 {
-	return a.m_name > b.m_name;
+	return 0 <= a.m_name.compare(b.m_name);
 }
 bool operator== (const Employee& a, const Employee& b)
 {
